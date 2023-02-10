@@ -22,6 +22,6 @@ public class HiaDietFoodAPIController {
     @PutMapping("/sum")
     public ResponseEntity<Object> postDietFood(@RequestBody HiaDayTotalCalVO data){
         Map<String, Object> map = dfService.sumTotalCal(data);
-        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
 }

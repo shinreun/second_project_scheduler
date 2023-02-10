@@ -23,42 +23,27 @@ public class HiaDietFoodService {
     @Autowired DayFoodRepository dfRepo;
     @Autowired MemberInfoRepository mRepo;
     
-    // 하루 총 칼로리 계산
-    // public Map<String, Object> sumTotalCal(HiaDayTotalCalVO data){
-    //     Map<String, Object> map = new LinkedHashMap<String, Object>();
-    //     DayFoodCompleteEntity entity = new DayFoodCompleteEntity();
-    //     MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
-    //     DayFoodEntity day = dfRepo.findByMemberAndDfRegDt(member, data.getDay());
-    //     if(dfcRepo.countByMemberAndDfcDate(member, data.getDay()) != 1){
-    //         entity.setDfcTotalCal(day.getDfKcal());
-    //         dfcRepo.save(entity);
-    //     }
-    //     else if(dfcRepo.countByMemberAndDfcDate(member, data.getDay()) >= 1){
-    //         dfcRepo.deleteByMemberAndDfcDate(member, data.getDay());
-    //         dfcRepo.insertData(day);
-    //         dfcRepo.save(entity);
-    //     }
-    //     map.put("status", true);
-    //     map.put("message", "해당 일 총 칼로리가 등록되었습니다.");
-    //     map.put("code", HttpStatus.OK);
-    //     return map;
-    // }
-
+    // 해당 일 총 칼로리 계산
     public Map<String, Object> sumTotalCal(HiaDayTotalCalVO data){
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
         List<DayFoodEntity> list = dfRepo.findByMemberAndDfRegDt(member, data.getDay());
         Integer totalCal = 0;
-        for (int  i =0; i< list.size(); i++) {
-            totalCal += list.get(i).getDfKcal();
+        if(member == null){
+            map.put("status", false);
+            map.put("message", "회원번호 및 날짜를 확인해주세요.");
+            map.put("code", HttpStatus.BAD_REQUEST);
         }
-        DayFoodCompleteEntity entity = DayFoodCompleteEntity.builder().dfcTotalCal(totalCal).dfcDate(data.getDay()).dfcGoal(0).build();
+        else{
+            for (int  i =0; i< list.size(); i++) {
+             totalCal += list.get(i).getDfKcal();
+        }
+        DayFoodCompleteEntity entity = DayFoodCompleteEntity.builder().dfcMiSeq(data.getMiSeq()).dfcTotalCal(totalCal).dfcDate(data.getDay()).dfcGoal(false).build();
         dfcRepo.save(entity);
         map.put("status", true);
         map.put("message", "해당 일 총 칼로리가 등록되었습니다.");
         map.put("code", HttpStatus.OK);
+        }
         return map;
     }
-
-
 }
