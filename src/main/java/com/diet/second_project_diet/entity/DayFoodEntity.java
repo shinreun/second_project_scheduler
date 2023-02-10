@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +32,7 @@ public class DayFoodEntity {
   // @Column (name="df_mi_seq") private Long dfMiSeq; 
   @Column (name="df_menu") private String dfMenu; 
   @Column (name="df_img") private String dfImg; 
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @Column (name="df_reg_dt") private LocalDate dfRegDt; 
   @Column (name="df_kcal") private Integer dfKcal; 
 }
