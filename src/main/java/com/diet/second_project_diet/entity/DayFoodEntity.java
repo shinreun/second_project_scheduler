@@ -3,7 +3,9 @@ package com.diet.second_project_diet.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,6 @@ public class DayFoodEntity {
   // @Column (name="df_mi_seq") private Long dfMiSeq; 
   @Column (name="df_menu") private String dfMenu; 
   @Column (name="df_img") private String dfImg; 
-  @Column (name="df_reg_dt") private Date dfRegDt; 
+  @Column (name="df_reg_dt") private LocalDate dfRegDt; 
   @Column (name="df_kcal") private Integer dfKcal; 
 }
