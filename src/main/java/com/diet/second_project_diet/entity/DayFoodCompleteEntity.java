@@ -3,10 +3,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
+import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -32,7 +30,6 @@ public class DayFoodCompleteEntity {
   // @Column (name = "dfc_mi_seq") private Long dfcMiSeq;
   @Column (name = "dfc_total_cal") private Integer dfcTotalCal;
   @Column (name = "dfc_goal") private Integer dfcGoal;
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  @Column (name = "dfc_date") private LocalDate dfcDate;
-
+  // @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @Column (name = "dfc_date") private LocalDateTime dfcDate;
 }

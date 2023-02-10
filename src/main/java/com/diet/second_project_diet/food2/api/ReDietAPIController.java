@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,5 +62,12 @@ public class ReDietAPIController {
   @GetMapping("/images/{uri}") 
   public ResponseEntity<Resource> getImage(@PathVariable String uri, HttpServletRequest request) throws Exception {
     return fileService.getImageFile(uri);
+  }
+  
+  // 식단 내용 출력
+  @GetMapping("/daily") 
+  public ResponseEntity<Object> getDailyDiet(@Parameter(description = "회원 토큰") String token, @Parameter(description = "날짜") LocalDateTime date) {
+    Map<String, Object> map = dService.getDailyDiet(token, date);
+    return new ResponseEntity<>(map, HttpStatus.OK);
   }
 }
