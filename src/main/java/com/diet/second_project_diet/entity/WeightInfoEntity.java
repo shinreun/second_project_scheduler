@@ -1,5 +1,7 @@
 package com.diet.second_project_diet.entity;
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +25,8 @@ import lombok.NoArgsConstructor;
 public class WeightInfoEntity {
   @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
   @Column(name = "wei_seq") private Long weiSeq;
-  @ManyToOne @JoinColumn(name = "wei_mi_seq") MemberInfoEntity member;
+  @JsonIgnore @ManyToOne @JoinColumn(name = "wei_mi_seq") MemberInfoEntity member;
   // @Column(name = "wei_mi_seq") private Long weiMiSeq;
-  @Column(name = "wei_weight") private Integer weiWeight;
-  @Column(name = "wei_date") private Date weiDate;
+  @Column(name = "wei_weight") private Double weiWeight;
+  @Column(name = "wei_date") private LocalDate weiDate;
 }

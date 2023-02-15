@@ -3,7 +3,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +25,6 @@ public class DietSuggestEntity {
   @Column(name = "diet_content") private String dietContent;
   @Column(name = "diet_status") private Integer dietStatus;
   @Column(name = "diet_total_cal") private Integer dietTotalCal;
-  @Column(name = "diet_date") private Date dietDate;
+  @Column(name = "diet_date") private LocalDate dietDate;
   @Column(name = "diet_hard") private Integer dietHard;
 }
