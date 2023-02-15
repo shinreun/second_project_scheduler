@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,8 +26,9 @@ import lombok.Builder;
 @Builder
 public class DayFoodEntity {
   @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
-  @Column(name = "df_seq") private Long dfSeq;
-  @ManyToOne @JoinColumn(name = "df_mi_seq") MemberInfoEntity member; 
+  @Column(name = "df_seq")
+  private Long dfSeq;
+  @JsonIgnore @ManyToOne @JoinColumn(name = "df_mi_seq") MemberInfoEntity member; 
   // @Column (name="df_mi_seq") private Long dfMiSeq; 
   @Column (name="df_menu") private String dfMenu; 
   @Column (name="df_img") private String dfImg; 
