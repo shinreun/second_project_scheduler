@@ -6,4 +6,5 @@ import java.time.LocalDate;
 
 public interface DietSuggestRepository extends JpaRepository<DietSuggestEntity, Long>{
   List< DietSuggestEntity> findByDietHardAndDietDate(Integer dietHard, LocalDate date);
+  DietSuggestEntity findByDietSeq(Long dietSeq);
 }
