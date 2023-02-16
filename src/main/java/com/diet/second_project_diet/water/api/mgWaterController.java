@@ -47,15 +47,15 @@ public class mgWaterController {
      }
 
          // 그냥 월~일 음수량..(조회)
-      @GetMapping("/list")
-      public String getWaterList(Model model, @RequestParam @Nullable String keyword, @PageableDefault
-      (size = 10, sort = "wiSeq", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-      if (keyword == null) keyword = "";
-      // ? 이고는 쓸 말. // Map<String,Object> resultMap = wService. // 뒤를 모르겠다. 일단 밑에 것만 하기.
-      return new ResponseEntity<>(wService.waterList(keyword, pageable), HttpStatus.ACCEPTED);
-      // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
-      }    
-      }
+    //   @GetMapping("/list")
+    //   public String getWaterList(Model model, @RequestParam @Nullable String keyword, @PageableDefault
+    //   (size = 10, sort = "wiSeq", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+    //   if (keyword == null) keyword = "";
+    //   // ? 이고는 쓸 말. // Map<String,Object> resultMap = wService. // 뒤를 모르겠다. 일단 밑에 것만 하기.
+    //   return new ResponseEntity<>(wService.waterList(keyword, pageable), HttpStatus.ACCEPTED);
+    //   // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
+    //   }    
+    //   }
 
     //  // 총 물 개수가 나옴
     //  @GetMapping("/list") 

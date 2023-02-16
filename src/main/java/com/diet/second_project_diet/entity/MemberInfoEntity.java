@@ -33,7 +33,9 @@ public class MemberInfoEntity {
   @Column(name = "mi_weight") private Integer miWeight;
   @Column(name = "mi_hard") private Integer miHard;
   @Column(name = "mi_kcal") private Integer miKcal;
-  @Column(name = "mi_time") private LocalDate miTime;
+  @Column(name = "mi_start_time") private LocalDate miStartTime;
+  @Column(name = "mi_end_time") private LocalDate miEndTime;
   @Column(name = "mi_water") private Integer miWater;
   @Column(name = "mi_token") private String miToken;
+  @Column(name = "mi_img") private String miImg;
 }

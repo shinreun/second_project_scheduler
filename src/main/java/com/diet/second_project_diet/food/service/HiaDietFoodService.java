@@ -28,7 +28,7 @@ public class HiaDietFoodService {
     // 해당 일 총 칼로리 계산 후 데이터 저장
     public HiaResponseVO sumTotalCal(HiaDayTotalCalVO data){
         MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
-        DayFoodCompleteEntity entity = dfcRepo.findByDfcMiSeqAndDfcDate(data.getMiSeq(), data.getDay().toLocalDate());
+        DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, data.getDay().toLocalDate());
         System.out.println(entity);
         List<DayFoodEntity> list = dfRepo.findByMember(member);
         LocalDate now = data.getDay().toLocalDate(); 
@@ -49,7 +49,7 @@ public class HiaDietFoodService {
                         totalCal += list.get(i).getDfKcal();
                     }
                 }
-        entity = DayFoodCompleteEntity.builder().dfcMiSeq(data.getMiSeq()).dfcTotalCal(totalCal).dfcDate(data.getDay().toLocalDate()).dfcGoal(false).build();
+        entity = DayFoodCompleteEntity.builder().member(member).dfcTotalCal(totalCal).dfcDate(data.getDay().toLocalDate()).dfcGoal(false).build();
         dfcRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(false)
@@ -63,7 +63,8 @@ public class HiaDietFoodService {
     // 년.월 별 목표 달성 여부 출력
     public HiaGoalResponseVO getMonthDietFood(Long miSeq, Integer year, Integer month){
         HiaGoalResponseVO response = new HiaGoalResponseVO();
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByDfcMiSeq(miSeq);
+        MemberInfoEntity member =mRepo.findByMiSeq(miSeq);
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
         List<DayFoodCompleteEntity> list = new ArrayList<>();
         for(int i=0 ; i<entity.size(); i++){
         if(year == entity.get(i).getDfcDate().getYear() && month == entity.get(i).getDfcDate().getMonthValue()){
@@ -85,7 +86,8 @@ public class HiaDietFoodService {
 
     // 해당일 실시간 섭취한 칼로리 조회
     public HiaDataResponseVO getDayKcal(Long miSeq, LocalDate today){
-        DayFoodCompleteEntity entity = dfcRepo.findByDfcMiSeqAndDfcDate(miSeq, today);
+        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+        DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, today);
         HiaDataResponseVO response = new HiaDataResponseVO();
         if(entity == null){
             response = HiaDataResponseVO.builder()
@@ -100,7 +102,8 @@ public class HiaDietFoodService {
 
     // 목표 달성도 출력
     public HiaProgGoalResponseVO getProgGoal(Long miSeq, Integer month){
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByDfcMiSeq(miSeq);
+        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
         Integer count = 0;
         Integer length = 0;
         for(int i=0; i<entity.size(); i++){

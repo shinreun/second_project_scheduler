@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 
@@ -20,7 +21,7 @@ import com.diet.second_project_diet.repository.MemberInfoRepository;
 @Service
 public class HiaMemberService {
     @Autowired MemberInfoRepository mRepo;
-
+    @Autowired HiaFileService fileService;
     // 회원정보 조회 기능
     public HiaDataResponseVO getMemberInfo(Long seq){
         MemberInfoEntity entity = mRepo.findByMiSeq(seq);
@@ -87,7 +88,7 @@ public class HiaMemberService {
             MemberInfoEntity entity = MemberInfoEntity.builder()
             .miId(data.getId()).miPwd(data.getPwd()).miName(data.getName()).miBirth(data.getBirth())
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight())
-            .miHard(data.getHard()).miKcal(data.getCal()).miWater(data.getWater()).miTime(data.getTime()).miToken(data.getToken()).build();
+            .miHard(data.getHard()).miKcal(data.getCal()).miWater(data.getWater()).miStartTime(data.getTime()).miToken(data.getToken()).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();
@@ -141,7 +142,7 @@ public class HiaMemberService {
         }
         else{
             MemberInfoEntity m = entity.get();
-            m.setMiTime(data.getTime());
+            m.setMiEndTime(data.getTime());
             mRepo.save(m);
             response = HiaResponseVO.builder()
             .status(true).message("목표 날짜가 변경되었습니다.").build();
@@ -180,7 +181,7 @@ public class HiaMemberService {
             .status(false).message("회원정보를 확인해주세요.").build();
         }
         else{
-            String strDate = entity.getMiTime().toString();
+            String strDate = entity.getMiEndTime().toString();
             String todayFm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date(format.parse(strDate).getTime()); 
@@ -191,6 +192,25 @@ public class HiaMemberService {
 
             response = HiaTimeResponseVO.builder()
             .status(true).message("D-Day 정보 출력!").dDay(Ddays).build();
+        }
+        return response;
+    }
+
+    // 회원 이미지 등록
+    public HiaResponseVO addImgFile(MultipartFile file, String token){
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
+        HiaResponseVO response = new HiaResponseVO();
+        String saveFilePath = "";
+        try{
+            saveFilePath = fileService.saveImageFile(file);
+            member.setMiImg(saveFilePath);
+            mRepo.save(member);
+            response = HiaResponseVO.builder()
+            .status(true).message("파일 등록 완료").build();
+        }
+        catch(Exception e){
+            response = HiaResponseVO.builder()
+            .status(false).message("파일 전송에 실패했습니다.").build();
         }
         return response;
     }

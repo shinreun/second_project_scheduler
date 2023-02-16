@@ -63,7 +63,7 @@ public class HiaAddMemberInfoVO {
         this.hard = member.getMiHard();
         this.cal = member.getMiKcal();
         this.water = member.getMiWater();
-        this.time = member.getMiTime();
+        this.time = member.getMiEndTime();
         this.token = member.getMiToken();
     }
 }

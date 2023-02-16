@@ -85,17 +85,17 @@ public class mgWaterService {
     }
     
     // 내가 하고 싶은 월 ~ 일 음수량 ^조회^
-    public mgWaterListResponseVO waterList(String keyword, Pageable pageable) {
-        Page<WaterInfoEntity> page = wRepo.findByWiCountContains( keyword, pageable);
-        //Map<String, Object> map = new LinkedHashMap<String, Object>();
-         mgWaterResponseVO response = new mgWaterResponseVO();
-        response = mgWaterResponseVO.builder()
-        .list(page.getContent())
-        .total(page.getTotalElements())
-        .titalPage(page.getTotalPages())
-        .currentPage(page.getNumber())
-        .build();
-        return reponse;
+    // public mgWaterListResponseVO waterList(String keyword, Pageable pageable) {
+    //     Page<WaterInfoEntity> page = wRepo.findByWiCountContains( keyword, pageable);
+    //     //Map<String, Object> map = new LinkedHashMap<String, Object>();
+    //      mgWaterResponseVO response = new mgWaterResponseVO();
+    //     response = mgWaterResponseVO.builder()
+    //     .list(page.getContent())
+    //     .total(page.getTotalElements())
+    //     .titalPage(page.getTotalPages())
+    //     .currentPage(page.getNumber())
+    //     .build();
+    //     return reponse;
 
 
         // map.put("list", page.getContent());
@@ -104,7 +104,7 @@ public class mgWaterService {
         // map.put("currentPage", page.getNumber());
         // return map;
 
-      }
+    //   }
     }
     
     //  }
