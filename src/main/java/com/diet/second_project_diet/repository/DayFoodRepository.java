@@ -16,6 +16,8 @@ public interface DayFoodRepository extends JpaRepository<DayFoodEntity, Long>{
   //   public DayFoodEntity findByMemberAndDfRegDt(MemberInfoEntity member, LocalDate dfRegDt);
 
   public List<DayFoodEntity> findByMemberAndDfRegDt(MemberInfoEntity member, LocalDateTime dfRegDt);
+
+  public List<DayFoodEntity> findByMember(MemberInfoEntity member);
   
   @Query(value = "select * from day_food where date(df_reg_dt)=date(:date) and df_mi_seq =:miSeq", nativeQuery = true)
   public List<DayFoodEntity> findByMiSeqAndDfRegDt( @Param("miSeq")Long miSeq, @Param("date") LocalDateTime dfRegDt);
