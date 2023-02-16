@@ -29,8 +29,8 @@ public class HiaUpdateMemberInfoVO {
     private Integer cal;
     @Schema(description = "목표 음수량", example = "8")
     private Integer water;
-    @Schema(description = "목표 일", example = "2023-10-01")
-    private LocalDate time;
+    @Schema(description = "목표 기간", example = "100")
+    private Integer time;
     @Schema(description = "회원 상태", example = "1")
     private Integer status;
 }

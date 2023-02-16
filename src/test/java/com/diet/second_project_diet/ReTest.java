@@ -38,7 +38,7 @@ public class ReTest {
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1);
-		member.setMiKcal(1200); member.setMiTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
+		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);
 		dietRepo.save(dayfood);
@@ -53,7 +53,7 @@ public class ReTest {
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1);
-		member.setMiKcal(1200); member.setMiTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
+		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
 
 		DayFoodEntity entity = new DayFoodEntity(null, member, "메뉴", "이미지", LocalDateTime.now(), 100);
@@ -70,7 +70,7 @@ public class ReTest {
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1);
-		member.setMiKcal(1200); member.setMiTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
+		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
 
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);
@@ -85,7 +85,7 @@ public class ReTest {
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1);
-		member.setMiKcal(1200); member.setMiTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
+		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
 
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);

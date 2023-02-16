@@ -37,8 +37,8 @@ public class HiaAddMemberInfoVO {
     private Integer cal;
     @Schema(description = "목표 음수량", example = "8")
     private Integer water;
-    @Schema(description = "목표 일", example = "2023-10-01")
-    private LocalDate time;
+    @Schema(description = "목표 기간", example = "100")
+    private Integer time;
     @Schema(description = "토큰", example = "token")
     private String token;
     // public Integer getAge(MemberInfoEntity member){
@@ -63,7 +63,6 @@ public class HiaAddMemberInfoVO {
         this.hard = member.getMiHard();
         this.cal = member.getMiKcal();
         this.water = member.getMiWater();
-        this.time = member.getMiTime();
         this.token = member.getMiToken();
     }
 }

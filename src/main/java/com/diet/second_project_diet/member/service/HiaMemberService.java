@@ -1,6 +1,7 @@
 package com.diet.second_project_diet.member.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+
+import net.bytebuddy.asm.Advice.Local;
 
 
 @Service
@@ -83,11 +86,12 @@ public class HiaMemberService {
             response = HiaResponseVO.builder()
             .status(false).message("토큰정보를 입력하세요.").build();
         }
-        else{
+        else {
+            LocalDate endTime = LocalDate.now().plusDays(data.getTime());
             MemberInfoEntity entity = MemberInfoEntity.builder()
             .miId(data.getId()).miPwd(data.getPwd()).miName(data.getName()).miBirth(data.getBirth())
-            .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight())
-            .miHard(data.getHard()).miKcal(data.getCal()).miWater(data.getWater()).miTime(data.getTime()).miToken(data.getToken()).build();
+            .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
+            .miHard(data.getHard()).miKcal(data.getCal()).miWater(data.getWater()).miStartTime(LocalDate.now()).miToken(data.getToken()).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();
@@ -133,18 +137,26 @@ public class HiaMemberService {
 
     // 목표 날짜 수정
     public HiaResponseVO updateGoalDay(HiaUpdateMemberInfoVO data){
-        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+        MemberInfoEntity entity = mRepo.findByMiSeq(data.getSeq());
         HiaResponseVO response = new HiaResponseVO();
-        if(entity.isEmpty()){
+        if(entity == null){
             response = HiaResponseVO.builder()
             .status(false).message("회원번호를 확인해주세요.").build();
         }
-        else{
-            MemberInfoEntity m = entity.get();
-            m.setMiTime(data.getTime());
-            mRepo.save(m);
-            response = HiaResponseVO.builder()
-            .status(true).message("목표 날짜가 변경되었습니다.").build();
+        else {
+            if (LocalDate.now().isAfter(entity.getMiEndTime())) {
+                entity.setMiStartTime(LocalDate.now());
+                entity.setMiEndTime(LocalDate.now().plusDays(data.getTime()));
+                mRepo.save(entity);
+                response = HiaResponseVO.builder()
+                        .status(true).message("목표 날짜가 변경되었습니다.").build();
+            }
+            else {
+                entity.setMiEndTime(entity.getMiStartTime().plusDays(data.getTime()));
+                mRepo.save(entity);
+                response = HiaResponseVO.builder()
+                        .status(true).message("목표 날짜가 변경되었습니다.").build();
+            }
         }
         return response;
     }
@@ -180,7 +192,7 @@ public class HiaMemberService {
             .status(false).message("회원정보를 확인해주세요.").build();
         }
         else{
-            String strDate = entity.getMiTime().toString();
+            String strDate = entity.getMiStartTime().toString();
             String todayFm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date(format.parse(strDate).getTime()); 
