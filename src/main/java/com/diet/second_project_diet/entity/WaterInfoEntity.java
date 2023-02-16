@@ -1,4 +1,5 @@
 package com.diet.second_project_diet.entity;
+import java.time.LocalDate;
 import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,11 +21,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "water_info")
 @Builder
 public class WaterInfoEntity {
-  @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
+  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) 
   @Column(name = "wi_seq") private Long wiSeq;
   @ManyToOne @JoinColumn(name = "wi_mi_seq") MemberInfoEntity member;
   // @Column(name = "wi_mi_seq") private Long wiMiSeq;
-  @Column(name = "wi_count") private String wiCount;
-  @Column(name = "wi_date") private Date wiDate;
-  @Column(name = "wi_goal") private Integer wiGoal;
+  @Column(name = "wi_count") private Integer wiCount; // 양
+  @Column(name = "wi_date") private LocalDate wiDate; // 날짜
+  @Column(name = "wi_goal") private Integer wiGoal; // 목표량
 }
