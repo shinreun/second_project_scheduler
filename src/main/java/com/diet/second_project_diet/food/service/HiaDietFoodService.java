@@ -38,7 +38,7 @@ public class HiaDietFoodService {
             for (int  i =0; i< list.size(); i++) {
              totalCal += list.get(i).getDfKcal();
         }
-        DayFoodCompleteEntity entity = DayFoodCompleteEntity.builder().dfcMiSeq(data.getMiSeq()).dfcTotalCal(totalCal).dfcDate(data.getDay()).dfcGoal(false).build();
+        DayFoodCompleteEntity entity = DayFoodCompleteEntity.builder().member(member).dfcTotalCal(totalCal).dfcDate(data.getDay()).dfcGoal(false).build();
         dfcRepo.save(entity);
         map.put("status", true);
         map.put("message", "해당 일 총 칼로리가 등록되었습니다.");
