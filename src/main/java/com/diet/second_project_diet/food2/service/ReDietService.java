@@ -87,7 +87,7 @@ public class ReDietService {
           totalCal += list.get(i).getDfKcal();
         }
         Boolean success = true;
-        if (member.getMiKcal() < entity.getDfKcal()) {
+        if (member.getMiKcal() < totalCal) {
           success = false;
         }
         total.setDfcTotalCal(totalCal);
@@ -158,7 +158,7 @@ public class ReDietService {
           totalCal += list.get(i).getDfKcal();
         }
         Boolean success = true;
-        if (member.getMiKcal() < entity.getDfKcal()) {
+        if (member.getMiKcal() < totalCal) {
           success = false;
         }
         DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
@@ -177,7 +177,7 @@ public class ReDietService {
           totalCal += list.get(i).getDfKcal();
         }
         Boolean success = true;
-        if (member.getMiKcal() < entity.getDfKcal()) {
+        if (member.getMiKcal() < totalCal) {
           success = false;
         }
         DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
@@ -219,7 +219,7 @@ public class ReDietService {
           totalCal += list.get(i).getDfKcal();
         }
         Boolean success = true;
-        if (member.getMiKcal() < entity.getDfKcal()) {
+        if (member.getMiKcal() < totalCal) {
           success = false;
         }
         DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
@@ -356,7 +356,7 @@ public class ReDietService {
           totalCal += list.get(i).getDfKcal();
         }
         Boolean success = true;
-        if (member.getMiKcal() < entity.getDfKcal()) {
+        if (member.getMiKcal() < totalCal) {
           success = false;
         }
         DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
