@@ -1,4 +1,5 @@
 package com.diet.second_project_diet.entity;
+import java.time.LocalDate;
 import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,11 +21,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "pill_info_complete")
 @Builder
 public class PillInfoCompleteEntity {
-  @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
-  @Column(name = "pic_seq") private Long picSeq;
-  @ManyToOne @JoinColumn(name = "pic_mi_seq") MemberInfoEntity member;
-  // @Column(name = "pic_mi_seq") private Long picMiSeq;
-  @Column(name = "pic_total") private Integer picTotal;
-  @Column(name = "pic_goal") private Integer picGoal;
-  @Column(name = "pic_date") private Date picDate;
+    @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column(name = "pic_seq") private Long picSeq;
+    @ManyToOne @JoinColumn(name = "pic_pi_seq") PillInfoEntity pill;
+    // @Column(name = "pic_mi_seq") private Long picMiSeq;
+    @Column(name = "pic_total") private Integer picTotal;
+    @Column(name = "pic_goal") private Integer picGoal;
+    @Column(name = "pic_date") private LocalDate picDate;
 }
