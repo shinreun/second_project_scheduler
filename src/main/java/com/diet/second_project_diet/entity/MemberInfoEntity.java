@@ -37,4 +37,5 @@ public class MemberInfoEntity {
   @Column(name = "mi_end_time") private LocalDate miEndTime;
   @Column(name = "mi_water") private Integer miWater;
   @Column(name = "mi_token") private String miToken;
+  @Column(name = "mi_img") private String miImg;
 }

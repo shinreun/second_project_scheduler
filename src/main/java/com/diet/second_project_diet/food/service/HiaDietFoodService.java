@@ -85,7 +85,7 @@ public class HiaDietFoodService {
 
 
     // 해당일 실시간 섭취한 칼로리 조회
-    public HiaDataResponseVO getDayKcal(Long miSeq, LocalDate today) {
+    public HiaDataResponseVO getDayKcal(Long miSeq, LocalDate today){
         MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
         DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, today);
         HiaDataResponseVO response = new HiaDataResponseVO();
@@ -101,7 +101,7 @@ public class HiaDietFoodService {
     }
 
     // 목표 달성도 출력
-    public HiaProgGoalResponseVO getProgGoal(Long miSeq, Integer month) {
+    public HiaProgGoalResponseVO getProgGoal(Long miSeq, Integer month){
         MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
         List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
         Integer count = 0;

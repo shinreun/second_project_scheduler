@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 
@@ -23,7 +24,7 @@ import net.bytebuddy.asm.Advice.Local;
 @Service
 public class HiaMemberService {
     @Autowired MemberInfoRepository mRepo;
-
+    @Autowired HiaFileService fileService;
     // 회원정보 조회 기능
     public HiaDataResponseVO getMemberInfo(Long seq){
         MemberInfoEntity entity = mRepo.findByMiSeq(seq);
@@ -203,6 +204,25 @@ public class HiaMemberService {
 
             response = HiaTimeResponseVO.builder()
             .status(true).message("D-Day 정보 출력!").dDay(Ddays).build();
+        }
+        return response;
+    }
+
+    // 회원 이미지 등록
+    public HiaResponseVO addImgFile(MultipartFile file, String token){
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
+        HiaResponseVO response = new HiaResponseVO();
+        String saveFilePath = "";
+        try{
+            saveFilePath = fileService.saveImageFile(file);
+            member.setMiImg(saveFilePath);
+            mRepo.save(member);
+            response = HiaResponseVO.builder()
+            .status(true).message("파일 등록 완료").build();
+        }
+        catch(Exception e){
+            response = HiaResponseVO.builder()
+            .status(false).message("파일 전송에 실패했습니다.").build();
         }
         return response;
     }
