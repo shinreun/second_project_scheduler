@@ -1,5 +1,5 @@
 package com.diet.second_project_diet.entity;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,5 +26,5 @@ public class MemoInfoEntity {
   @ManyToOne @JoinColumn(name = "mei_mi_seq") MemberInfoEntity member; 
   // @Column(name = "mei_mi_seq") private Long meiMiSeq;
   @Column(name = "mei_content") private String meiContent;
-  @Column(name = "mei_date") private Date meiDate;
+  @Column(name = "mei_date") private LocalDate meiDate;
 }
