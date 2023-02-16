@@ -6,11 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class mgWaterListResponseVO {
-    private Boolean status;
+public class mgDayWaterVO {
+    private String wiDate;
+    private Integer wiCount;
+    private Boolean wiGoal;
+    private String  wiSuccess;
+     private Boolean status;
     private String message;
     
 }

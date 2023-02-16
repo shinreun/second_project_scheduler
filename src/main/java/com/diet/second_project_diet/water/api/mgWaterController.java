@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.common.lang.Nullable;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,6 +24,9 @@ import org.springframework.data.domain.Sort;
 import com.diet.second_project_diet.repository.WaterInfoRepository;
 import com.diet.second_project_diet.water.service.mgWaterService;
 import com.diet.second_project_diet.water.vo.mgWaterResponseVO;
+import com.diet.second_project_diet.water.vo.mgWeekListWaterVO;
+import com.diet.second_project_diet.water.vo.mgWeeklyListVO;
+import com.diet.second_project_diet.water.vo.mgDayWaterVO;
 
 import org.springframework.ui.Model;
 
@@ -32,30 +36,37 @@ public class mgWaterController {
     @Autowired mgWaterService wService;
 
 
-    //수정 
+    //수정  증가
      @PostMapping("/update") 
-     public ResponseEntity<mgWaterResponseVO > postUpdateWater(@RequestParam Long wiSeq, LocalDate wiDate) {
+     public ResponseEntity<mgWaterResponseVO > postUpdateWater(@RequestParam String token, LocalDate wiDate) {
        //Map<String, Object> resultMap = wService.updateWater(wiSeq,wiDate);
-        return new ResponseEntity<>(wService.updateWater(wiSeq,wiDate),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(wService.updateWater(token,wiDate),HttpStatus.ACCEPTED);
      }
-
+     // 수정 감소 
      @PostMapping("/minus") 
-     public ResponseEntity<mgWaterResponseVO> postMinusWater(@RequestParam Long wiSeq, LocalDate wiDate ) {
+     public ResponseEntity<mgWaterResponseVO> postMinusWater(@RequestParam String token, LocalDate wiDate ) {
         // Map<String, Object> resultMap = wService.minusWater(wiSeq,wiDate);
-        return new ResponseEntity<>(wService.minusWater(wiSeq, wiDate), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(wService.minusWater(token, wiDate), HttpStatus.ACCEPTED);
         //return new ResponseEntity<> (wService.minusWater(wiSeq, wiDate) ,HttpStatus.ACCEPTED);
      }
 
-      //    // 그냥 월~일 음수량..(조회)
-      // @GetMapping("/list")
-      // public String getWaterList(Model model, @RequestParam @Nullable String keyword, @PageableDefault
-      // (size = 10, sort = "wiSeq", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-      // if (keyword == null) keyword = "";
-      // // ? 이고는 쓸 말. // Map<String,Object> resultMap = wService. // 뒤를 모르겠다. 일단 밑에 것만 하기.
-      // return new ResponseEntity<>(wService.waterList(keyword, pageable), HttpStatus.ACCEPTED);
-      // // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
-      // }    
-      // }
+         // 그냥 월~일 음수량..(조회)
+      @GetMapping("/day")
+      public ResponseEntity<mgDayWaterVO> getWaterList(@Parameter @RequestParam String token, @Parameter LocalDate date) {
+     
+      return new ResponseEntity<>(wService.weekWater(token, date), HttpStatus.ACCEPTED);
+      // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
+      }
+      
+      @GetMapping("/week")
+      public ResponseEntity<mgWeeklyListVO> getWeekWaterList(@Parameter @RequestParam String token, @Parameter LocalDate date) {
+      return new ResponseEntity<>(wService.weekWaterList(token, date), HttpStatus.ACCEPTED);
+      // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
+      }
+      
+
+
+      }
 
     //  // 총 물 개수가 나옴
     //  @GetMapping("/list") 
@@ -82,6 +93,6 @@ public class mgWaterController {
 //     }
 
 
-}
+
 
 

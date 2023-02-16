@@ -1,5 +1,6 @@
 package com.diet.second_project_diet.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import org.springframework.data.jpa.repository.Query;

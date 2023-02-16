@@ -1,4 +1,5 @@
 package com.diet.second_project_diet.food2.service;
+package com.diet.second_project_diet.food2.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,7 +70,9 @@ public class ReDietService {
       DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
       if (total == null) {
         Boolean success = true;
+        Boolean success = true;
         if (member.getMiKcal() < entity.getDfKcal()) {
+          success = false;
           success = false;
         }
         DayFoodCompleteEntity comp = DayFoodCompleteEntity.builder()

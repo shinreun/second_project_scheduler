@@ -2,14 +2,14 @@ package com.diet.second_project_diet.water.vo;
 
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 
 
-// 제대로된 조회를 만들려고 했음 : 총 음수량
+
+
 
 
 @Data

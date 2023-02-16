@@ -27,5 +27,5 @@ public class WaterInfoEntity {
   // @Column(name = "wi_mi_seq") private Long wiMiSeq;
   @Column(name = "wi_count") private Integer wiCount; // 양
   @Column(name = "wi_date") private LocalDate wiDate; // 날짜
-  @Column(name = "wi_goal") private Integer wiGoal; // 목표량
+  @Column(name = "wi_goal") private Boolean wiGoal; // 목표량
 }
