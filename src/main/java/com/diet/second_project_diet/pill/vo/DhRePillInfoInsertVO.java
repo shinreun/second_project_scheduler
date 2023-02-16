@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DhPillInfoInsertVO {
+public class DhRePillInfoInsertVO {
     // @Schema(description = "멤버 seq", example = "1")
     // private Long member;
     
