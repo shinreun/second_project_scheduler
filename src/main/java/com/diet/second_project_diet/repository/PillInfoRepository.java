@@ -4,4 +4,8 @@ import com.diet.second_project_diet.entity.PillInfoEntity;
 
 public interface PillInfoRepository extends JpaRepository<PillInfoEntity, Long>{
   
+    public PillInfoEntity findByPiSeq(Long piSeq);
+
+    public PillInfoEntity findByPiName(String piName);
+    
 }
