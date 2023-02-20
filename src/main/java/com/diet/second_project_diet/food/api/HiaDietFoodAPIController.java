@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.diet.second_project_diet.food.service.HiaDietFoodService;
 import com.diet.second_project_diet.food.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.food.vo.HiaDayTotalCalVO;
+import com.diet.second_project_diet.food.vo.HiaDdayGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaProgGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaResponseVO;
@@ -55,7 +56,16 @@ public class HiaDietFoodAPIController {
 
     @Operation(summary = "해당 월 목표 달성률 조회", description = "달성률 조회")
     @GetMapping("/goal")
-    public ResponseEntity<HiaProgGoalResponseVO> getProgGoal(@RequestParam Long miSeq, @RequestParam Integer month){
+    public ResponseEntity<HiaProgGoalResponseVO> getProgGoal(
+        @Parameter(description = "회원번호", example = "1") @RequestParam Long miSeq, 
+        @Parameter(description = "조회 월", example = "2") @RequestParam Integer month){
         return new ResponseEntity<HiaProgGoalResponseVO>(dfService.getProgGoal(miSeq, month), HttpStatus.ACCEPTED);
+    }
+
+    @Operation(summary = "D-day 기준 목표 달성률 조회", description = "달성률 조회")
+    @GetMapping("/day/goal")
+    public ResponseEntity<HiaDdayGoalResponseVO> getDdayGoal(
+        @Parameter(description = "회원번호", example = "1") @RequestParam Long miSeq) throws Exception{
+        return new ResponseEntity<HiaDdayGoalResponseVO>(dfService.getDdayGoal(miSeq), HttpStatus.ACCEPTED);
     }
 }

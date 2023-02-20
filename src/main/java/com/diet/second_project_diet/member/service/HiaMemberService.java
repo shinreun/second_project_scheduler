@@ -18,7 +18,6 @@ import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
 
-import net.bytebuddy.asm.Advice.Local;
 
 
 @Service

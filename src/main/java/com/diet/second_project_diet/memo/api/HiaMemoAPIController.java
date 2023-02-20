@@ -1,6 +1,5 @@
 package com.diet.second_project_diet.memo.api;
 
-import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,16 +33,15 @@ public class HiaMemoAPIController {
         return new ResponseEntity<>(meService.addMemoInfo(data), HttpStatus.ACCEPTED);
     }
 
-    @Operation(summary = "메모정보 조회", description = "해당일 메모 정보를 조회합니다.")
+    @Operation(summary = "메모정보 조회", description = "해당 식단의 메모 정보를 조회합니다.")
     @GetMapping("/day")
     public ResponseEntity<HiaMemoDataResponseVO> getMemoInfo(
-        @Parameter(description = "회원번호", example = "1") @RequestParam Long miSeq,
-        @Parameter(description = "조회 일", example = "2023-02-15") @RequestParam LocalDate day
+        @Parameter(description = "오늘의 식단 번호", example = "1") @RequestParam Long dfSeq
     ){
-        return new ResponseEntity<HiaMemoDataResponseVO>(meService.getMemoInfo(miSeq, day), HttpStatus.ACCEPTED);
+        return new ResponseEntity<HiaMemoDataResponseVO>(meService.getMemoInfo(dfSeq), HttpStatus.ACCEPTED);
     }
 
-    @Operation(summary = "메모정보 수정", description = "회원정보와 날짜를 검색해 메모 수정합니다.")
+    @Operation(summary = "메모정보 수정", description = "오늘의 식단 번호를 검색해 메모 수정합니다.")
     @PatchMapping("/update")
     public ResponseEntity<HiaMemoResponseVO> updateMemoInfo(@RequestBody HiaAddMemoVO data){
         return new ResponseEntity<HiaMemoResponseVO>(meService.updateMemoInfo(data), HttpStatus.ACCEPTED);
