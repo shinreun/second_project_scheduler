@@ -1,5 +1,6 @@
 package com.diet.second_project_diet.food2.api;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestInsertVO;
 import com.diet.second_project_diet.food2.vo.ReGetDailyDietResponseVO;
 import com.diet.second_project_diet.food2.vo.ReStatusAndMessageResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteVO;
 import com.diet.second_project_diet.food2.vo.ReDietCalorieExInsertVO;
 import com.diet.second_project_diet.food2.vo.ReDietCalorieInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietInsertResponseVO;
@@ -141,5 +143,19 @@ public class ReDietAPIController {
     return new ResponseEntity<>(dService.addDietByCalorieEx(dceSeq, token), HttpStatus.OK);
   }
 
+  @Operation(summary = "식단 예시 검색 기능", description = "키워드를 포함하고 있는 식단예시를 검색합니다.")
+  @GetMapping("/search/cal") 
+  public ResponseEntity<ReDietCalorieResponseVO> addDietByCalEx(
+      @Parameter(description = "검색 키워드", example = "닭") String keyword) {
+    return new ResponseEntity<>(dService.searchCalorieEx(keyword), HttpStatus.OK);
+  }
+  
+  @Operation(summary = "이번주 칼로리 섭취 기록", description = "해당일 포함하고 있는 일주일의 칼로리 섭취량을 출력합니다.")
+  @GetMapping("/week/cal") 
+  public ResponseEntity<ReDayFoodCompleteVO> findWeeklyCalSum (@Parameter(description = "날짜", example = "2023-02-02") LocalDate date,
+  @Parameter(description = "회원 토큰", example = "1") String token) {
+    return new ResponseEntity<>(dService.weeklyCalSum(token, date), HttpStatus.OK);
+  }
+ 
 }
 

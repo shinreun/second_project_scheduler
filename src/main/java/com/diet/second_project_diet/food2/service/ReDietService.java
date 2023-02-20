@@ -3,8 +3,11 @@ package com.diet.second_project_diet.food2.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +17,7 @@ import com.diet.second_project_diet.entity.DietSuggestEntity;
 import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 import com.diet.second_project_diet.entity.DietCalorieExEntity;
+import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestInsertVO;
 import com.diet.second_project_diet.food2.vo.ReGetDailyDietResponseVO;
@@ -25,11 +29,14 @@ import com.diet.second_project_diet.food2.vo.ReDietInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestWeekResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestWeeklyFinalVO;
+import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteVO;
 import com.diet.second_project_diet.repository.DayFoodRepository;
 import com.diet.second_project_diet.repository.DietSuggestRepository;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DietCalorieExRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+import com.diet.second_project_diet.repository.MemoInfoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +52,7 @@ public class ReDietService {
   private final DayFoodCompleteRepository dietCompRepo;
   private final DietSuggestRepository suggestRepo;
   private final DietCalorieExRepository calRepo;
-  
+  private final MemoInfoRepository memoRepo;
   
   // 식단 추가
   public ReStatusAndMessageResponseVO addDailyDiet(ReDietInsertVO data, MultipartFile file, String token) 
@@ -223,6 +230,10 @@ public class ReDietService {
         .status(false).message("로그인 한 회원과 식단 작성자가 일치하지 않습니다.")
         .build();
       } else {
+        MemoInfoEntity memo = memoRepo.findByDay(entity);
+        if (memo != null) {
+          memoRepo.delete(memo);
+        }
         dietRepo.delete(entity);
 
         List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
@@ -312,45 +323,69 @@ public class ReDietService {
     else {
       // 오늘 날짜를 가지고 와서
       LocalDate today = LocalDate.now();
-      // 
+      // 회원의 다이어트 강도와 날짜와 일치하는 추천 식단을 일주일치 가져온다.
       List<DietSuggestEntity> suggestion = suggestRepo.findWeeklySuggest(member.getMiHard(), today);
+      // 만약에 추천식단이 없다면, 오류메시지 출력
       if (suggestion.isEmpty()) {
         response = ReDietSuggestWeeklyFinalVO.builder().data(null).message("식단 추천 목록이 없습니다.").status(false).build();
-      } else {
+      }
+      // 추천 식단이 있다면,
+      else {
         // 일주일치 식단 추천 목록을 가져와서, 같은 날짜 별로 나눈다.
         List<DietSuggestEntity> list = new ArrayList<>();
         List<ReDietSuggestWeekResponseVO> list2 = new ArrayList<>();
+        ReDietSuggestWeekResponseVO entity= new ReDietSuggestWeekResponseVO();
+        // 식단 목록의 총 개수만큼 반복문을 돌려서
         for (int i = 0; i < suggestion.size(); i++) {
-          if (i == suggestion.size() - 1) {
+          // 만약에 첫번째 식단이라면,
+          if (i == 0) {
+            // 리스트를 새로 정의 하고,
+            list = new ArrayList<>();
+            // 리스트에 본인의 값 저장
+            list.add(suggestion.get(i));
+          }
+          // 리스트가 마지막 값이 아닌경우,
+          // 만약 이전 식단과 날짜가 같다면, 
+          else if (suggestion.get(i).getDietDate().isEqual(suggestion.get(i - 1).getDietDate())) {
+            // 리스트에 자신의 값 넣고
+            list.add(suggestion.get(i));
+            // 만약 그 중에서도 마지막 값이라면
+            if (i == suggestion.size() - 1) {
+              // 날짜와 엔터티에 리스트를 넣고
+              String date = suggestion.get(i).getDietDate().getDayOfWeek().toString();
+              entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
+              // 리스트에 다시 엔터티를 저장
+              list2.add(entity);
+            }
+          }
+          // 만약 이전날과 날짜가 다르다면, 그 요일의 시작 값이므로
+          else {
+            // 그 이전날의 요일을 구해서엔터티에 저장하고, 
+            String date = suggestion.get(i-1).getDietDate().getDayOfWeek().toString();
+            entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
+            // 리스트에 엔터티를 저장한 후
+            list2.add(entity);
+            // 리스트를 새로 정의한다.
+            list = new ArrayList<>();
             // 리스트에 자신의 값 넣고,
             list.add(suggestion.get(i));
-            // 최종적으로 저장. 
-            String date = suggestion.get(i).getDietDate().getDayOfWeek().toString();
-            ReDietSuggestWeekResponseVO entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
-            list2.add(entity);
-          }
-          else {
-            // 만약 다음 번호와 날짜가 같다면, 하나의 리스트에 입력후 그 리스트를 VO에 입력
-            if (suggestion.get(i).getDietDate().isEqual(suggestion.get(i + 1).getDietDate())) {
-              // 예를 들어 월요일 첫번째 식단이면 요일별로 정리할 리스트에 저장
-              list.add(suggestion.get(i));
-            }
-            // 만약 다음날과 날짜가 다르다면
-            else if (!suggestion.get(i).getDietDate().isEqual(suggestion.get(i + 1).getDietDate())) {
-              // 리스트에 자신의 값 넣고,
-              list.add(suggestion.get(i));
-              // 최종적으로 저장. 
-              String date = suggestion.get(i).getDietDate().getDayOfWeek().toString();
-              ReDietSuggestWeekResponseVO entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
+            // 만약 그 중에서도 마지막 값이라면
+            if (i == suggestion.size() - 1) {
+              // 날짜와 엔터티에 리스트를 넣고
+              String date2 = suggestion.get(i).getDietDate().getDayOfWeek().toString();
+              entity = ReDietSuggestWeekResponseVO.builder().date(date2).data(list).build();
+              // 리스트에 다시 엔터티를 저장
               list2.add(entity);
             }
           }
         }
+        // 내보내야 하는 값에 데이터를 넣어서 내보냄
         response = ReDietSuggestWeeklyFinalVO.builder().data(list2).message("식단 추천 목록이 조회되었습니다.").status(true).build();
       }
     }
     return response;
   }
+
 
  // 식단 예시 등록
  public ReDietCalorieInsertResponseVO addDietCalorieEx(ReDietCalorieExInsertVO data, MultipartFile file) {
@@ -429,5 +464,48 @@ public class ReDietService {
         response = ReStatusAndMessageResponseVO.builder().status(true).message("식단이 등록되었습니다.").build();
       }
     return response;
+  }
+
+  // 식단 예시 검색 기능
+  public ReDietCalorieResponseVO searchCalorieEx(String keyword) {
+    List<DietCalorieExEntity> cal = calRepo.findByDceContentContains(keyword);
+    ReDietCalorieResponseVO response = new ReDietCalorieResponseVO();
+    if (cal.isEmpty()) {
+      response = ReDietCalorieResponseVO.builder()
+          .data(null).message("검색어를 포함한 식단 예시가 없습니다.").status(false).build();
+    } else {
+      response = ReDietCalorieResponseVO.builder()
+          .data(cal).message("검색어를 포함한 식단 예시가 출력 되었습니다.").status(true).build();
+    }
+    return response;
+  }
+
+  // 한주 칼로리 섭취량
+  public ReDayFoodCompleteVO weeklyCalSum(String token, LocalDate date) {
+    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+    ReDayFoodCompleteVO response = new ReDayFoodCompleteVO();
+    // 회원이 없다면, 로그인이 안된 것이므로 오류 메시지 출력
+    if (member == null) {
+      response = ReDayFoodCompleteVO.builder().data(null).message("로그인 한 회원만 이용가능합니다.").status(false).build();
+    }
+    else {
+      ReDayFoodCompleteResponseVO entity = new ReDayFoodCompleteResponseVO();
+      List<DayFoodCompleteEntity> list = dietCompRepo.findWeeklyCal(member, date);
+      if (list.isEmpty()) {
+        response = ReDayFoodCompleteVO.builder().data(null).message("이번주 칼로리 섭취 기록이 존재하지 않습니다.").status(false).build();
+      }
+      else {
+        List<ReDayFoodCompleteResponseVO> data = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+          entity = ReDayFoodCompleteResponseVO.builder().dfcSeq(list.get(i).getDfcSeq())
+              .dfcTotalCal(list.get(i).getDfcTotalCal())
+              .date(list.get(i).getDfcDate().getDayOfWeek().toString())
+              .dfcDate(list.get(i).getDfcDate()).build();
+          data.add(entity);
+        }
+        response = ReDayFoodCompleteVO.builder().data(data).message("이번주 칼로리 섭취 기록입니다.").status(true).build();
+      }
+    }
+    return response;    
   }
 }

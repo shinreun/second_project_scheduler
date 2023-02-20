@@ -23,5 +23,9 @@ public interface DayFoodCompleteRepository extends JpaRepository<DayFoodComplete
     public DayFoodCompleteEntity deleteByMemberAndDfcDate(MemberInfoEntity member, LocalDateTime dfcDate);
 
     @Query(value = "select * from day_food_complete where date(dfc_date)=date(:date) and dfc_mi_seq =:miSeq", nativeQuery = true)
-  public DayFoodCompleteEntity findByMiSeqAndDfcRegDt(@Param("miSeq") Long miSeq, @Param("date") LocalDateTime dfcRegDt);
+    public DayFoodCompleteEntity findByMiSeqAndDfcRegDt(@Param("miSeq") Long miSeq,
+        @Param("date") LocalDateTime dfcRegDt);
+    
+  @Query(value = "select a from DayFoodCompleteEntity a where year(a.dfcDate)=year(:date) and week(a.dfcDate)=week(:date) and a.member =:member order by a.dfcDate")
+  public List<DayFoodCompleteEntity> findWeeklyCal(@Param("member") MemberInfoEntity member, @Param("date") LocalDate dfcRegDt);
 }

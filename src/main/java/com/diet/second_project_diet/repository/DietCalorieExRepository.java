@@ -8,5 +8,7 @@ import com.diet.second_project_diet.entity.DietCalorieExEntity;
 
 public interface DietCalorieExRepository extends JpaRepository<DietCalorieExEntity, Long>{
   DietCalorieExEntity findByDceSeq(Long dceSeq);
+
   List<DietCalorieExEntity> findByDceContentContains(String dceContent);
+  
 }
