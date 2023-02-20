@@ -27,6 +27,8 @@ import com.diet.second_project_diet.food2.vo.ReDietCalorieInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietCalorieResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDietSuggestWeekResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDietSuggestWeeklyFinalVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -101,7 +103,15 @@ public class ReDietAPIController {
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token) {
     return new ResponseEntity<>(dService.getDietSuggest(token), HttpStatus.OK);
   }
+  
+  @Operation(summary = "해당 주 추천 식단 출력", description = "회원의 다이어트 강도에 일치하는 일주일치 추천 식단이 출력됩니다.")
+  @GetMapping("/suggest/week")
+  public ResponseEntity<ReDietSuggestWeeklyFinalVO> getSuggestWeeklyDiet(
+      @Parameter(description = "회원 토큰", example = "1") @RequestParam String token) {
+    return new ResponseEntity<>(dService.getDietSuggestWeekly(token), HttpStatus.OK);
+  }
 
+  
   @Operation(summary = "식단 예시 추가", description = "예시 식단과 사진, 칼로리를 등록합니다.")
   @PutMapping(value = "/calorie/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReDietCalorieInsertResponseVO> putDietCalorieEx(

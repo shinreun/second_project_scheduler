@@ -2,6 +2,7 @@ package com.diet.second_project_diet.food2.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,8 @@ import com.diet.second_project_diet.food2.vo.ReDietCalorieInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietCalorieResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietInsertResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDietSuggestWeekResponseVO;
+import com.diet.second_project_diet.food2.vo.ReDietSuggestWeeklyFinalVO;
 import com.diet.second_project_diet.repository.DayFoodRepository;
 import com.diet.second_project_diet.repository.DietSuggestRepository;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
@@ -102,15 +105,16 @@ public class ReDietService {
     return response;
   }
 
-  // 식단 출력
+  // 식단 출력 (날짜별)
   public ReGetDailyDietResponseVO getDailyDiet(String token, LocalDateTime date) {
     MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
     ReGetDailyDietResponseVO response = new ReGetDailyDietResponseVO();
     if (member == null) {
-      
+       response = ReGetDailyDietResponseVO.builder().status(false).message("등록되지 않은 회원 정보 입니다.")
+            .list(null).build();
     } else {
       List<DayFoodEntity> diet = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), date);
-      if (diet == null) {
+      if (diet.isEmpty()) {
         response = ReGetDailyDietResponseVO.builder().status(false).message("등록된 식단이 없습니다.")
             .list(null).build();
       } else {
@@ -132,33 +136,39 @@ public class ReDietService {
     } else {
       // 이미 존재하는 entity 들고오기
       DayFoodEntity entity = dietRepo.findByDfSeq(dfSeq);
-      String saveFilePath = "";
-      if (file == null) {
-        saveFilePath = entity.getDfImg();
+      if (entity == null) {
+        response = ReStatusAndMessageResponseVO.builder().status(false)
+            .message("존재하지 않는 식단 번호입니다.").build();
       }
-      try {
-        saveFilePath = fileService.saveImageFile(file);
-      } catch (Exception e) {
-        response = ReStatusAndMessageResponseVO.builder().status(false)
-      .message("파일 전송에 실패했습니다.").build();
-      }
-      if (data.getMenu() == null) {
-        response = ReStatusAndMessageResponseVO.builder().status(false)
-        .message("메뉴 이름을 입력하세요.").build();
-      } else if (data.getKcal() == null) {
-        response = ReStatusAndMessageResponseVO.builder().status(false)
-        .message("해당 칼로리를 입력하세요.").build();
-      } else if (date == null) {
-        LocalDateTime today = LocalDateTime.now();
-        DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, today,
-            data.getKcal());
-        dietRepo.save(newEntity);
-        List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
-        Integer totalCal = 0;
-        for (int i = 0; i < list.size(); i++) {
-          totalCal += list.get(i).getDfKcal();
+      else {
+
+        String saveFilePath = "";
+        if (file == null) {
+          saveFilePath = entity.getDfImg();
         }
-        Boolean success = true;
+        try {
+          saveFilePath = fileService.saveImageFile(file);
+        } catch (Exception e) {
+          response = ReStatusAndMessageResponseVO.builder().status(false)
+          .message("파일 전송에 실패했습니다.").build();
+        }
+        if (data.getMenu() == null) {
+          response = ReStatusAndMessageResponseVO.builder().status(false)
+          .message("메뉴 이름을 입력하세요.").build();
+        } else if (data.getKcal() == null) {
+          response = ReStatusAndMessageResponseVO.builder().status(false)
+          .message("해당 칼로리를 입력하세요.").build();
+        } else if (date == null) {
+          LocalDateTime today = LocalDateTime.now();
+          DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, today,
+          data.getKcal());
+          dietRepo.save(newEntity);
+          List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
+          Integer totalCal = 0;
+          for (int i = 0; i < list.size(); i++) {
+            totalCal += list.get(i).getDfKcal();
+          }
+          Boolean success = true;
         if (member.getMiKcal() < totalCal) {
           success = false;
         }
@@ -166,11 +176,11 @@ public class ReDietService {
         total.setDfcTotalCal(totalCal);
         total.setDfcGoal(success);
         dietCompRepo.save(total);
-          response = ReStatusAndMessageResponseVO.builder().status(true)
-          .message("식단이 수정되었습니다.").build();
+        response = ReStatusAndMessageResponseVO.builder().status(true)
+        .message("식단이 수정되었습니다.").build();
       } else {
         DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, date,
-            data.getKcal());
+        data.getKcal());
         dietRepo.save(newEntity);
         List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
         Integer totalCal = 0;
@@ -185,11 +195,12 @@ public class ReDietService {
         total.setDfcTotalCal(totalCal);
         total.setDfcGoal(success);
         dietCompRepo.save(total);
-
+        
         response = ReStatusAndMessageResponseVO.builder().status(true)
-          .message("식단이 수정되었습니다.").build();
+        .message("식단이 수정되었습니다.").build();
       }
     }
+  }
     return response;
   }
   
@@ -278,13 +289,64 @@ public class ReDietService {
       response = ReDietSuggestResponseVO.builder().data(null).message("로그인 한 회원만 이용가능합니다.").status(false).build();
     } else {
       LocalDate today = LocalDate.now();
-      System.out.println(today);
       List<DietSuggestEntity> suggestion = suggestRepo.findByDietHardAndDietDate(member.getMiHard(), today);
       if (suggestion.isEmpty()) {
         response = ReDietSuggestResponseVO.builder().data(null).message("식단 추천 목록이 없습니다.").status(false).build();
       } else {
         response = ReDietSuggestResponseVO.builder().data(suggestion).message("식단 추천 목록이 조회되었습니다.").status(true)
             .build();
+      }
+    }
+    return response;
+  }
+ 
+  // 추천 주별 식단 출력
+  public ReDietSuggestWeeklyFinalVO getDietSuggestWeekly(String token) {
+    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+    ReDietSuggestWeeklyFinalVO response = new ReDietSuggestWeeklyFinalVO();
+    // 회원이 없다면, 로그인이 안된 것이므로 오류 메시지 출력
+    if (member == null) {
+      response = ReDietSuggestWeeklyFinalVO.builder().data(null).message("로그인 한 회원만 이용가능합니다.").status(false).build();
+    }
+    // 로그인이 된 경우,
+    else {
+      // 오늘 날짜를 가지고 와서
+      LocalDate today = LocalDate.now();
+      // 
+      List<DietSuggestEntity> suggestion = suggestRepo.findWeeklySuggest(member.getMiHard(), today);
+      if (suggestion.isEmpty()) {
+        response = ReDietSuggestWeeklyFinalVO.builder().data(null).message("식단 추천 목록이 없습니다.").status(false).build();
+      } else {
+        // 일주일치 식단 추천 목록을 가져와서, 같은 날짜 별로 나눈다.
+        List<DietSuggestEntity> list = new ArrayList<>();
+        List<ReDietSuggestWeekResponseVO> list2 = new ArrayList<>();
+        for (int i = 0; i < suggestion.size(); i++) {
+          if (i == suggestion.size() - 1) {
+            // 리스트에 자신의 값 넣고,
+            list.add(suggestion.get(i));
+            // 최종적으로 저장. 
+            String date = suggestion.get(i).getDietDate().getDayOfWeek().toString();
+            ReDietSuggestWeekResponseVO entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
+            list2.add(entity);
+          }
+          else {
+            // 만약 다음 번호와 날짜가 같다면, 하나의 리스트에 입력후 그 리스트를 VO에 입력
+            if (suggestion.get(i).getDietDate().isEqual(suggestion.get(i + 1).getDietDate())) {
+              // 예를 들어 월요일 첫번째 식단이면 요일별로 정리할 리스트에 저장
+              list.add(suggestion.get(i));
+            }
+            // 만약 다음날과 날짜가 다르다면
+            else if (!suggestion.get(i).getDietDate().isEqual(suggestion.get(i + 1).getDietDate())) {
+              // 리스트에 자신의 값 넣고,
+              list.add(suggestion.get(i));
+              // 최종적으로 저장. 
+              String date = suggestion.get(i).getDietDate().getDayOfWeek().toString();
+              ReDietSuggestWeekResponseVO entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
+              list2.add(entity);
+            }
+          }
+        }
+        response = ReDietSuggestWeeklyFinalVO.builder().data(list2).message("식단 추천 목록이 조회되었습니다.").status(true).build();
       }
     }
     return response;
