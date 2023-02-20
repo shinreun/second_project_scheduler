@@ -3,7 +3,6 @@ package com.diet.second_project_diet.repository;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import org.springframework.data.jpa.repository.Query;
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

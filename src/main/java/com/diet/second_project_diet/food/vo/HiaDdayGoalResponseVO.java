@@ -1,6 +1,5 @@
-package com.diet.second_project_diet.memo.vo;
+package com.diet.second_project_diet.food.vo;
 
-import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HiaGetMemoVO {
-    String content;
-    // LocalDate day;
+public class HiaDdayGoalResponseVO {
+    private Boolean status;
+    private String message;
+    private String data;
 }

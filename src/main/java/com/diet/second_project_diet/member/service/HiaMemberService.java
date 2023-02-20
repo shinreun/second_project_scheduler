@@ -18,7 +18,6 @@ import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
 
-import net.bytebuddy.asm.Advice.Local;
 
 
 @Service
@@ -193,10 +192,10 @@ public class HiaMemberService {
             .status(false).message("회원정보를 확인해주세요.").build();
         }
         else{
-            String strDate = entity.getMiStartTime().toString();
+            String endDate = entity.getMiEndTime().toString();
             String todayFm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date(format.parse(strDate).getTime()); 
+            Date date = new Date(format.parse(endDate).getTime()); 
             Date today = new Date(format.parse(todayFm).getTime());
             Long calculate = date.getTime() - today.getTime();
             int Ddays = (int) (calculate / ( 24*60*60*1000));

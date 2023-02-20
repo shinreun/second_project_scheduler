@@ -1,7 +1,5 @@
 package com.diet.second_project_diet.member.vo;
 
-import java.time.LocalDate;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

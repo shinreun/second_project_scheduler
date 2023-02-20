@@ -1,6 +1,5 @@
 package com.diet.second_project_diet.memo.vo;
 
-import java.time.LocalDate;
 
 import com.diet.second_project_diet.entity.MemoInfoEntity;
 
@@ -14,13 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class HiaAddMemoVO {
-    private Long miSeq;
+    private Long dfSeq;
     private String content;
-    private LocalDate date;
+    
 
     public HiaAddMemoVO(MemoInfoEntity memo){
-        this.miSeq = memo.getMember().getMiSeq();
+        this.dfSeq = memo.getDay().getDfSeq();
         this.content = memo.getMeiContent();
-        this.date = memo.getMeiDate();
     }
 }

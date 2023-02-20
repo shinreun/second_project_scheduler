@@ -12,9 +12,11 @@ import com.diet.second_project_diet.entity.DayFoodEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 import com.diet.second_project_diet.food.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.food.vo.HiaDayTotalCalVO;
+import com.diet.second_project_diet.food.vo.HiaDdayGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaProgGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaResponseVO;
+import com.diet.second_project_diet.member.service.HiaMemberService;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DayFoodRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
@@ -24,12 +26,13 @@ public class HiaDietFoodService {
     @Autowired DayFoodCompleteRepository dfcRepo;
     @Autowired DayFoodRepository dfRepo;
     @Autowired MemberInfoRepository mRepo;
-    
+    @Autowired HiaMemberService hiaMService;
+
     // 해당 일 총 칼로리 계산 후 데이터 저장
     public HiaResponseVO sumTotalCal(HiaDayTotalCalVO data){
         MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
         DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, data.getDay().toLocalDate());
-        System.out.println(entity);
+        // System.out.println(entity);
         List<DayFoodEntity> list = dfRepo.findByMember(member);
         LocalDate now = data.getDay().toLocalDate(); 
         HiaResponseVO response = new HiaResponseVO();
@@ -100,7 +103,7 @@ public class HiaDietFoodService {
         return response;
     }
 
-    // 목표 달성도 출력
+    // 매월 목표 달성도 출력
     public HiaProgGoalResponseVO getProgGoal(Long miSeq, Integer month){
         MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
         List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
@@ -117,6 +120,25 @@ public class HiaDietFoodService {
         Double result = (double)count/length*100;
         String success = String.format("%.2f", result);
         HiaProgGoalResponseVO response = HiaProgGoalResponseVO.builder().data(success).status(true).message("달성도가 출력되었습니다.").build();
+        return response;
+    }
+
+    // D-day 기준 목표 달성도 출력
+    public HiaDdayGoalResponseVO getDdayGoal(Long miSeq) throws Exception{
+        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+        List<DayFoodCompleteEntity> list = dfcRepo.findByMember(member);
+        Integer count = 0;
+        Integer dDay = 0;
+        for(int i=0; i<list.size(); i++){
+            if(list.get(i).getDfcGoal() == true){
+                count += 1;
+                dDay = hiaMService.dday(miSeq).getDDay();
+            }
+        }
+        Double result = (double)count/dDay*100;
+        String success = String.format("%.2f", result);
+        HiaDdayGoalResponseVO response = HiaDdayGoalResponseVO.builder()
+        .status(true).message("D-day 기준 목표 달성도 출력").data(success).build();
         return response;
     }
 }

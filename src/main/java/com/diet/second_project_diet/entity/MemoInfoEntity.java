@@ -23,8 +23,7 @@ import lombok.NoArgsConstructor;
 public class MemoInfoEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "mei_seq") private Long meiSeq;
-  @ManyToOne @JoinColumn(name = "mei_mi_seq") MemberInfoEntity member; 
+  @ManyToOne @JoinColumn(name = "mei_df_seq") DayFoodEntity day; 
   // @Column(name = "mei_mi_seq") private Long meiMiSeq;
   @Column(name = "mei_content") private String meiContent;
-  @Column(name = "mei_date") private LocalDate meiDate;
 }
