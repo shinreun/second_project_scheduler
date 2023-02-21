@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class HiaResponseVO {
     @Schema(description = "상태" , example = "true")
     private Boolean status;
-    @Schema(description = "메세지", example = "000 정보가 출력되었습니다.")
+    @Schema(description = "메세지", example = "정보가 입력되었습니다.")
     private String message;
 }
