@@ -158,15 +158,15 @@ public class mgWaterService {
             return response;
         }
         // 멤버별 입력 -> 달성율&성공여부 출력(목표달성율)
-    public mgGoalResponseVO goalWater(Long miSeq) throws Exception {
-       MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public mgGoalResponseVO goalWater(String token) throws Exception {
+       MemberInfoEntity member = mRepo.findByMiTokenIs(token);
        List<WaterInfoEntity> list = wRepo.findByMember(member);
        Integer sum = 0;
        Integer dday = 0;
        for(int i=0; i<list.size(); i++){
             if(list.get(i).getWiGoal() == true) {
                 sum +=1; 
-                dday = hiaMemberService.dday(miSeq).getDDay();
+                dday = hiaMemberService.dday(token).getDDay();
             }
        }
        Double result = (double)sum/dday*100;

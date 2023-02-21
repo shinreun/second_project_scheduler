@@ -16,6 +16,7 @@ import com.diet.second_project_diet.food.vo.HiaDayTotalCalVO;
 import com.diet.second_project_diet.food.vo.HiaDdayGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaDetailResponseVO;
 import com.diet.second_project_diet.food.vo.HiaGoalResponseVO;
+import com.diet.second_project_diet.food.vo.HiaGoalVO;
 import com.diet.second_project_diet.food.vo.HiaProgGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.service.HiaMemberService;
@@ -35,8 +36,8 @@ public class HiaDietFoodService {
     @Autowired MemoInfoRepository meRepo;
 
     // 해당 일 총 칼로리 계산 후 데이터 저장
-    public HiaResponseVO sumTotalCal(HiaDayTotalCalVO data){
-        MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
+    public HiaResponseVO sumTotalCal(HiaDayTotalCalVO data, String token){
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, data.getDay().toLocalDate());
         List<DayFoodEntity> list = dfRepo.findByMember(member);
         LocalDate now = data.getDay().toLocalDate(); 
@@ -69,16 +70,21 @@ public class HiaDietFoodService {
 
 
     // 년.월 별 목표 달성 여부 출력
-    public HiaGoalResponseVO getMonthDietFood(Long miSeq, Integer year, Integer month) {
-        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public HiaGoalResponseVO getMonthDietFood(String token, Integer year, Integer month) {
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         HiaGoalResponseVO response = new HiaGoalResponseVO();
         List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
-        List<DayFoodCompleteEntity> list = new ArrayList<>();
+        List<HiaGoalVO> list = new ArrayList<>();
+        HiaGoalVO vo = new HiaGoalVO();
         for(int i=0 ; i<entity.size(); i++){
         if(year == entity.get(i).getDfcDate().getYear() && month == entity.get(i).getDfcDate().getMonthValue()){
-            list.add(entity.get(i));
+            // list.add(entity.get(i));
+            vo = HiaGoalVO.builder()
+            .date(entity.get(i).getDfcDate()).goal(entity.get(i).getDfcGoal()).totalCal(entity.get(i).getDfcTotalCal()).build();
+            list.add(vo);
         }
     }
+    
         if(list.size() == 0){
             response = HiaGoalResponseVO.builder()
             .status(true).message("조회된 정보가 없습니다.").build();
@@ -93,8 +99,8 @@ public class HiaDietFoodService {
 
 
     // 해당일 실시간 섭취한 칼로리 조회
-    public HiaDataResponseVO getDayKcal(Long miSeq, LocalDate today){
-        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public HiaDataResponseVO getDayKcal(String token, LocalDate today){
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, today);
         HiaDataResponseVO response = new HiaDataResponseVO();
         if(entity == null){
@@ -109,8 +115,8 @@ public class HiaDietFoodService {
     }
 
     // 매월 목표 달성도 출력
-    public HiaProgGoalResponseVO getProgGoal(Long miSeq, Integer month){
-        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public HiaProgGoalResponseVO getProgGoal(String token, Integer month){
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
         Integer count = 0;
         Integer length = 0;
@@ -129,15 +135,15 @@ public class HiaDietFoodService {
     }
 
     // D-day 기준 목표 달성도 출력
-    public HiaDdayGoalResponseVO getDdayGoal(Long miSeq) throws Exception{
-        MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public HiaDdayGoalResponseVO getDdayGoal(String token) throws Exception{
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         List<DayFoodCompleteEntity> list = dfcRepo.findByMember(member);
         Integer count = 0;
         Integer dDay = 0;
         for(int i=0; i<list.size(); i++){
             if(list.get(i).getDfcGoal() == true){
                 count += 1;
-                dDay = hiaMService.dday(miSeq).getDDay();
+                dDay = hiaMService.dday(member.getMiToken()).getDDay();
             }
         }
         Double result = (double)count/dDay*100;

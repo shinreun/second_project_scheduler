@@ -25,8 +25,8 @@ public class HiaMemberService {
     @Autowired MemberInfoRepository mRepo;
     @Autowired HiaFileService fileService;
     // 회원정보 조회 기능
-    public HiaDataResponseVO getMemberInfo(Long seq){
-        MemberInfoEntity entity = mRepo.findByMiSeq(seq);
+    public HiaDataResponseVO getMemberInfo(String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaDataResponseVO response = new HiaDataResponseVO();
         if(entity == null){
             response = HiaDataResponseVO.builder()
@@ -104,17 +104,16 @@ public class HiaMemberService {
     }
 
     // 목표 칼로리 수정
-    public HiaResponseVO updateGoalKcal(HiaUpdateMemberInfoVO data){
-        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+    public HiaResponseVO updateGoalKcal(HiaUpdateMemberInfoVO data, String token){
+       MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
-        if(entity.isEmpty()){
+        if(entity == null){
             response = HiaResponseVO.builder()
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            MemberInfoEntity m = entity.get();
-            m.setMiKcal(data.getCal());
-            mRepo.save(m);
+            entity.setMiKcal(data.getCal());
+            mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 칼로리가 변경되었습니다.").build();
         }
@@ -122,17 +121,16 @@ public class HiaMemberService {
     }
 
     // 목표 몸무게 수정
-    public HiaResponseVO updateGoalKg(HiaUpdateMemberInfoVO data){
-        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+    public HiaResponseVO updateGoalKg(HiaUpdateMemberInfoVO data, String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
-        if(entity.isEmpty()){
+        if(entity == null){
             response = HiaResponseVO.builder()
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            MemberInfoEntity m = entity.get();
-            m.setMiGoalKg(data.getKg());
-            mRepo.save(m);
+            entity.setMiGoalKg(data.getKg());
+            mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 몸무게가 변경되었습니다.").build();
         }
@@ -140,17 +138,16 @@ public class HiaMemberService {
     }
 
     // 목표 음수량 수정
-    public HiaResponseVO updateGoalWater(HiaUpdateMemberInfoVO data){
-        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+    public HiaResponseVO updateGoalWater(HiaUpdateMemberInfoVO data, String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
-        if(entity.isEmpty()){
+        if(entity == null){
             response = HiaResponseVO.builder()
             .status(false).message("회원번호를 확인해주세요.").build();
         }
-        else{
-            MemberInfoEntity m = entity.get();
-            m.setMiWater(data.getWater());
-            mRepo.save(m);
+        else{           
+            entity.setMiWater(data.getWater());
+            mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 음수량이 변경되었습니다.").build();
         }
@@ -158,8 +155,8 @@ public class HiaMemberService {
     }
 
     // 목표 날짜 수정
-    public HiaResponseVO updateGoalDay(HiaUpdateMemberInfoVO data){
-        MemberInfoEntity entity = mRepo.findByMiSeq(data.getSeq());
+    public HiaResponseVO updateGoalDay(HiaUpdateMemberInfoVO data, String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
             response = HiaResponseVO.builder()
@@ -184,17 +181,16 @@ public class HiaMemberService {
     }
 
     // 다이어트 강도 수정
-    public HiaResponseVO updateHard(HiaUpdateMemberInfoVO data){
-        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+    public HiaResponseVO updateHard(HiaUpdateMemberInfoVO data, String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
-        if(entity.isEmpty()){
+        if(entity == null){
             response = HiaResponseVO.builder()
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            MemberInfoEntity m = entity.get();
-            m.setMiHard(data.getHard());
-            mRepo.save(m);
+            entity.setMiHard(data.getHard());
+            mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("다이어트 강도가 변경되었습니다.").build();
         }
@@ -202,8 +198,8 @@ public class HiaMemberService {
     } 
 
     // 회원 탈퇴
-    public HiaResponseVO deleteMember(HiaUpdateMemberInfoVO data){
-        MemberInfoEntity entity = mRepo.findByMiSeq(data.getSeq());
+    public HiaResponseVO deleteMember(HiaUpdateMemberInfoVO data ,String token){
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
             response = HiaResponseVO.builder()
@@ -223,8 +219,8 @@ public class HiaMemberService {
     }
 
     // D-Day 계산하기
-    public HiaTimeResponseVO dday(Long seq) throws Exception{
-        MemberInfoEntity entity = mRepo.findByMiSeq(seq); 
+    public HiaTimeResponseVO dday(String token) throws Exception{
+        MemberInfoEntity entity = mRepo.findByMiTokenIs(token); 
         HiaTimeResponseVO response = new HiaTimeResponseVO();
         
         if(entity == null){

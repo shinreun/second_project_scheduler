@@ -2,8 +2,7 @@ package com.diet.second_project_diet.food.vo;
 
 import java.util.List;
 
-import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class HiaGoalResponseVO {
+    @Schema(description = "상태" , example = "true")
     private Boolean status;
+    @Schema(description = "메세지", example = "000 정보가 출력되었습니다.")
     private String message;
-    private List<DayFoodCompleteEntity> list;
+    @Schema(description = "리스트 정보 출력")
+    private List<HiaGoalVO> list;
 }
