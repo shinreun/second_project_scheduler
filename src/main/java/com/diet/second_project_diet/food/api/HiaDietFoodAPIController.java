@@ -16,6 +16,7 @@ import com.diet.second_project_diet.food.service.HiaDietFoodService;
 import com.diet.second_project_diet.food.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.food.vo.HiaDayTotalCalVO;
 import com.diet.second_project_diet.food.vo.HiaDdayGoalResponseVO;
+import com.diet.second_project_diet.food.vo.HiaDetailResponseVO;
 import com.diet.second_project_diet.food.vo.HiaGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaProgGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaResponseVO;
@@ -68,4 +69,11 @@ public class HiaDietFoodAPIController {
         @Parameter(description = "회원번호", example = "1") @RequestParam Long miSeq) throws Exception{
         return new ResponseEntity<HiaDdayGoalResponseVO>(dfService.getDdayGoal(miSeq), HttpStatus.ACCEPTED);
     }
+    @Operation(summary = "오늘의 식단 상세정보 보기", description = "상세내용과 메모정보 조회")
+    @GetMapping("/day/detail")
+    public ResponseEntity<HiaDetailResponseVO> getDetailDiet(
+        @Parameter(description = "오늘의 식단 번호", example = "1") @RequestParam Long dfSeq){
+            return new ResponseEntity<HiaDetailResponseVO>(dfService.getDetailDiet(dfSeq), HttpStatus.ACCEPTED);
+        }
+
 }

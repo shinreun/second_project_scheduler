@@ -10,16 +10,20 @@ import org.springframework.stereotype.Service;
 import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
 import com.diet.second_project_diet.entity.DayFoodEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
+import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.food.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.food.vo.HiaDayTotalCalVO;
 import com.diet.second_project_diet.food.vo.HiaDdayGoalResponseVO;
+import com.diet.second_project_diet.food.vo.HiaDetailResponseVO;
 import com.diet.second_project_diet.food.vo.HiaGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaProgGoalResponseVO;
 import com.diet.second_project_diet.food.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.service.HiaMemberService;
+import com.diet.second_project_diet.memo.service.HiaMemoService;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DayFoodRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+import com.diet.second_project_diet.repository.MemoInfoRepository;
 
 @Service
 public class HiaDietFoodService {
@@ -27,12 +31,13 @@ public class HiaDietFoodService {
     @Autowired DayFoodRepository dfRepo;
     @Autowired MemberInfoRepository mRepo;
     @Autowired HiaMemberService hiaMService;
+    @Autowired HiaMemoService hiaMeService;
+    @Autowired MemoInfoRepository meRepo;
 
     // 해당 일 총 칼로리 계산 후 데이터 저장
     public HiaResponseVO sumTotalCal(HiaDayTotalCalVO data){
         MemberInfoEntity member = mRepo.findByMiSeq(data.getMiSeq());
         DayFoodCompleteEntity entity = dfcRepo.findByMemberAndDfcDate(member, data.getDay().toLocalDate());
-        // System.out.println(entity);
         List<DayFoodEntity> list = dfRepo.findByMember(member);
         LocalDate now = data.getDay().toLocalDate(); 
         HiaResponseVO response = new HiaResponseVO();
@@ -139,6 +144,22 @@ public class HiaDietFoodService {
         String success = String.format("%.2f", result);
         HiaDdayGoalResponseVO response = HiaDdayGoalResponseVO.builder()
         .status(true).message("D-day 기준 목표 달성도 출력").data(success).build();
+        return response;
+    }
+
+    // 오늘의 식단 상세보기
+    public HiaDetailResponseVO getDetailDiet(Long dfSeq){
+        DayFoodEntity day = dfRepo.findByDfSeq(dfSeq);
+        MemoInfoEntity memo = meRepo.findByDay(day);
+        HiaDetailResponseVO response = new HiaDetailResponseVO();
+        if(day == null){
+            response = HiaDetailResponseVO.builder()
+            .status(false).message("오늘의 식단 번호를 확인해주세요.").build();
+        }
+        else{
+            response = HiaDetailResponseVO.builder()
+            .status(true).message("오늘의 식단 상세보기").data(day).memo(memo.getMeiContent()).build();
+        }
         return response;
     }
 }

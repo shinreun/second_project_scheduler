@@ -12,6 +12,7 @@ import com.diet.second_project_diet.entity.DayFoodEntity;
 import com.diet.second_project_diet.entity.DietSuggestEntity;
 import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
+import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.entity.DietCalorieExEntity;
 import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestInsertVO;
@@ -27,6 +28,7 @@ import com.diet.second_project_diet.repository.DietSuggestRepository;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DietCalorieExRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+import com.diet.second_project_diet.repository.MemoInfoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +44,6 @@ public class ReDietService {
   private final DayFoodCompleteRepository dietCompRepo;
   private final DietSuggestRepository suggestRepo;
   private final DietCalorieExRepository calRepo;
-  
   
   // 식단 추가
   public ReStatusAndMessageResponseVO addDailyDiet(ReDietInsertVO data, MultipartFile file, String token) 
