@@ -62,19 +62,19 @@ public class DhPillAPIController {
    @Operation(summary = "약 조회 ", description = "회원이 현재 섭취중인 약을 조회합니다.")
    @GetMapping("/info")
    public ResponseEntity<DhListResponseVO> getPillInfo(
-           @Parameter(description = "회원 번호", example = "1") @RequestParam Long miSeq
+           @Parameter(description = "회원 번호", example = "1") @RequestParam String token
    ) {
-      return new ResponseEntity<>(piService.getPillInfo(miSeq), HttpStatus.OK);
+      return new ResponseEntity<>(piService.getPillInfo(token), HttpStatus.OK);
    }
 
    // 약 성공 여부 조회
    @Operation(summary = "약 성공 여부 조회", description = "회원이 섭취하는 모든 약을 다 먹은 경우, 성공으로 출력합니다.")
    @GetMapping("/info/success")
    public ResponseEntity<DhResponseVO> getSuccessPillInfo(
-           @Parameter(description = "회원 번호", example = "1") @RequestParam Long miSeq,
+           @Parameter(description = "회원 번호", example = "1") @RequestParam String token,
            @Parameter(description = "날짜", example = "2023-02-09") @RequestParam LocalDate picDate
    ) {
-      return new ResponseEntity<>(piService.getPillInfo2(picDate, miSeq), HttpStatus.OK);
+      return new ResponseEntity<>(piService.getPillInfo2(picDate, token), HttpStatus.OK);
    }
 
    // 작업중
