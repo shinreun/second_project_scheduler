@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class mgDayWaterVO {
-    private String wiDate;
-    private Integer wiCount;
-    private Boolean wiGoal;
-    private String  wiSuccess;
-    
-     private Boolean status;
+public class mgGoalResponseVO {
+    private String sucess;
     private String message;
+    private Boolean Status;
     
 }

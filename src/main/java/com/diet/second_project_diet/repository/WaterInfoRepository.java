@@ -15,15 +15,22 @@ import org.springframework.data.domain.Pageable;
 
 public interface WaterInfoRepository extends JpaRepository<WaterInfoEntity, Long> {
 
-  public  WaterInfoEntity findByWiSeq(Long wiSeq);  // 증가에 사용
+ // public  WaterInfoEntity findByWiSeq(Long wiSeq);  // 증가에 사용
 
  public Integer countByMemberAndWiDate(MemberInfoEntity member, LocalDate wiDate); // 직관적으로 뵜을 때 정보를 찾아낼 수 있는 것
  public WaterInfoEntity findByMemberAndWiDate(MemberInfoEntity member, LocalDate wiDate); // 이것을 숫자를 셍아리셈.. ! 
 
  @Query(value="select a from WaterInfoEntity a where week(a.wiDate) = week(:date) and year(a.wiDate) = year(:date)")
- public List<WaterInfoEntity> findByWeek(@Param("date") LocalDate wiDate);
+ public List<WaterInfoEntity> findByWeek(@Param("date") LocalDate wiDate); //주마다 조회
+
+
+ 
 
  public WaterInfoEntity findByWiDateAndMember(LocalDate wiDate, MemberInfoEntity member);
+
+//  public WaterInfoEntity findByWiGoal(Boolean wiGoal);
+
+ public List<WaterInfoEntity> findByMember(MemberInfoEntity member);
 
 
  

@@ -27,6 +27,8 @@ import com.diet.second_project_diet.water.vo.mgWaterResponseVO;
 import com.diet.second_project_diet.water.vo.mgWeekListWaterVO;
 import com.diet.second_project_diet.water.vo.mgWeeklyListVO;
 import com.diet.second_project_diet.water.vo.mgDayWaterVO;
+import com.diet.second_project_diet.water.vo.mgGoalResponseVO;
+import com.diet.second_project_diet.water.vo.mgMonthListVO;
 
 import org.springframework.ui.Model;
 
@@ -50,47 +52,33 @@ public class mgWaterController {
         //return new ResponseEntity<> (wService.minusWater(wiSeq, wiDate) ,HttpStatus.ACCEPTED);
      }
 
-         // 그냥 월~일 음수량..(조회)
-      @GetMapping("/day")
+      // 하루 음수량 조회 + 하루 달성율(%) 조회
+      @GetMapping("/day") 
       public ResponseEntity<mgDayWaterVO> getWaterList(@Parameter @RequestParam String token, @Parameter LocalDate date) {
      
       return new ResponseEntity<>(wService.weekWater(token, date), HttpStatus.ACCEPTED);
       // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
       }
       
+         // 요일별 T/F 나타내기 
       @GetMapping("/week")
       public ResponseEntity<mgWeeklyListVO> getWeekWaterList(@Parameter @RequestParam String token, @Parameter LocalDate date) {
       return new ResponseEntity<>(wService.weekWaterList(token, date), HttpStatus.ACCEPTED);
-      // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
-      }
       
-
-
+      }
+         // 멤버별 입력 -> 달성율&성공여부 출력
+         @GetMapping("/goal")
+         public ResponseEntity<mgGoalResponseVO> getDdayGoal(@RequestParam Long miSeq) throws Exception {
+            return new ResponseEntity<>(wService.goalWater(miSeq), HttpStatus.ACCEPTED);
+         }
+         // 캘린더 물 조회
+         @GetMapping("/month")
+         public ResponseEntity<mgMonthListVO> getMonthGoal(@RequestParam Long miSeq, Integer year, Integer month ) {
+            return new ResponseEntity<>(wService.monthWaterList(miSeq, year, month), HttpStatus.ACCEPTED);
+         }
       }
 
-    //  // 총 물 개수가 나옴
-    //  @GetMapping("/list") 
-    //  public ResponseEntity<Object> getCountWater(Long wiSeq) {
-    //     Map<String,Object> resultMap = wService.countWater(wiSeq);
-    //     return new ResponseEntity<Object>(resultMap,(HttpStatus) resultMap.get("code"));
-    //  }
-
-    //     //월~금 총 음수량(합계)
-    // @GetMapping("/total")
-    // public ResponseEntity<Object> getCountWater(@RequestParam Long wiCount) {
-    // Map<String, Object> resultMap = wService.countWater(wiCount);
-    // return new ResponseEntity<Object>(resultMap, (HttpStatus)resultMap.get("code"));
-    
-    // }
-
-
-
-// //추가를 만들려고 헀음(섭취량)
-//     @PostMapping("/add")
-//     public ResponseEntity<Object> postWater(@RequestBody mgAddWaterVO data) {
-//           Map<String, Object> resultMap = wService.addWater(data);
-//         return new ResponseEntity<Object>(resultMap, (HttpStatus) resultMap.get("code"));
-//     }
+   
 
 
 
