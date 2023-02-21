@@ -1,4 +1,4 @@
-package com.diet.second_project_diet.food2.api;
+package com.diet.second_project_diet.food.api;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diet.second_project_diet.food2.service.ReFileService;
-import com.diet.second_project_diet.food2.service.ReDietService;
-import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
-import com.diet.second_project_diet.food2.vo.ReGetDailyDietResponseVO;
-import com.diet.second_project_diet.food2.vo.ReStatusAndMessageResponseVO;
-import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteVO;
-import com.diet.second_project_diet.food2.vo.ReDietCalorieResponseVO;
+import com.diet.second_project_diet.food.service.HiaDietFoodService;
+import com.diet.second_project_diet.food.service.ReDietService;
+import com.diet.second_project_diet.food.service.ReFileService;
+import com.diet.second_project_diet.food.vo.ReDayFoodCompleteVO;
+import com.diet.second_project_diet.food.vo.ReDietCalorieResponseVO;
+import com.diet.second_project_diet.food.vo.ReDietInsertVO;
+import com.diet.second_project_diet.food.vo.ReGetDailyDietResponseVO;
+import com.diet.second_project_diet.food.vo.ReStatusAndMessageResponseVO;
+import com.diet.second_project_diet.food.vo.HiaDetailResponseVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class ReDietAPIController {
   @Value("${file.image.dailydiet}")
   String diet_image_path;
+  private final HiaDietFoodService dfService;
   private final ReDietService dService;
   private final ReFileService fileService;
 
@@ -99,12 +102,14 @@ public class ReDietAPIController {
     return new ResponseEntity<>(dService.searchCalorieEx(keyword), HttpStatus.OK);
   }
   
-  @Operation(summary = "이번주 칼로리 섭취 기록", description = "해당일 포함하고 있는 일주일의 칼로리 섭취량을 출력합니다.")
-  @GetMapping("/week/cal") 
-  public ResponseEntity<ReDayFoodCompleteVO> findWeeklyCalSum (@Parameter(description = "날짜", example = "2023-02-02") LocalDate date,
-  @Parameter(description = "회원 토큰", example = "1") String token) {
-    return new ResponseEntity<>(dService.weeklyCalSum(token, date), HttpStatus.OK);
-  }
+  
+  
+  @Operation(summary = "식단 상세보기", description = "식단 seq번호를 통해 상세내용과 메모정보 조회")
+    @GetMapping("/day/detail")
+    public ResponseEntity<HiaDetailResponseVO> getDetailDiet(
+        @Parameter(description = "오늘의 식단 번호", example = "1") Long dfSeq){
+            return new ResponseEntity<HiaDetailResponseVO>(dfService.getDetailDiet(dfSeq), HttpStatus.ACCEPTED);
+    }
  
 }
 

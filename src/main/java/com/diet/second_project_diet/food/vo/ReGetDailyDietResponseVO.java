@@ -1,6 +1,8 @@
-package com.diet.second_project_diet.food2.vo;
+package com.diet.second_project_diet.food.vo;
 
 import java.util.List;
+
+import com.diet.second_project_diet.entity.DayFoodEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -12,9 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReDietSuggestWeeklyFinalVO {
-  @Schema(description = "요일별 식단 추천", example = "true")
-  private List<ReDietSuggestWeekResponseVO> data;
+public class ReGetDailyDietResponseVO {
+  @Schema(description = "오늘 하루 식단")
+  private List<DayFoodEntity> list;
+  @Schema(description = "메모 내용")
+  private String memo;
   @Schema(description = "상태값", example = "true")
   private Boolean status;
   @Schema(description = "메시지", example = "메시지입니다")

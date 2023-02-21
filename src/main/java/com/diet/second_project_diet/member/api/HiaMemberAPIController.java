@@ -40,9 +40,11 @@ public class HiaMemberAPIController {
     }    
 
     @Operation(summary = "회원정보 등록", description = "회원정보 등록(회원가입)")
-    @PutMapping("/add")
-    public ResponseEntity<HiaResponseVO> putMemberAdd(@RequestBody HiaAddMemberInfoVO data){
-        return new ResponseEntity<>(mService.addMemberInfo(data), HttpStatus.ACCEPTED);
+    @PutMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HiaResponseVO> putMemberAdd (
+    @Parameter(description = "회원 정보") HiaAddMemberInfoVO data,
+    @Parameter(description = "사진 파일") MultipartFile file) throws Exception {
+        return new ResponseEntity<>(mService.addMemberInfo(data, file), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 칼로리 변경", description = "회원별 목표 칼로리 변경")
@@ -95,12 +97,12 @@ public class HiaMemberAPIController {
         return new ResponseEntity<>(mService.dday(token), HttpStatus.ACCEPTED);
     }
 
-    @Operation(summary = "회원 이미지 등록", description = "토큰을 통해 회원 이미지 등록")
+    @Operation(summary = "회원 이미지 수정", description = "토큰을 통해 회원 이미지 수정")
     @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HiaResponseVO> putImg(
         @Parameter(description = "사진 파일") MultipartFile file,
         @Parameter(description = "회원토큰") String token
         ) {
-        return new ResponseEntity<>(mService.addImgFile(file,token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateImgFile(file,token), HttpStatus.ACCEPTED);
     }
 }

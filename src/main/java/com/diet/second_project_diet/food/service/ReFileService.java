@@ -1,4 +1,4 @@
-package com.diet.second_project_diet.food2.service;
+package com.diet.second_project_diet.food.service;
 
 import java.net.URLEncoder;
 import java.nio.file.Files;

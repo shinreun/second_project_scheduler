@@ -17,6 +17,7 @@ import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+import com.diet.second_project_diet.utils.AESAlgorithm;
 
 
 
@@ -40,7 +41,7 @@ public class HiaMemberService {
     }
 
     // 회원정보(회원가입) 입력 기능
-    public HiaResponseVO addMemberInfo(HiaAddMemberInfoVO data){
+    public HiaResponseVO addMemberInfo(HiaAddMemberInfoVO data, MultipartFile file) throws Exception{
         HiaResponseVO response = new HiaResponseVO();
         if(data.getId() == null || data.getId().equals("")){
             response = HiaResponseVO.builder()
@@ -91,11 +92,19 @@ public class HiaMemberService {
             .status(false).message("토큰정보를 입력하세요.").build();
         }
         else {
+            String saveFilePath = "";
+            try {
+              saveFilePath = fileService.saveImageFile(file);
+            } catch (Exception e) {
+             response = HiaResponseVO.builder()
+               .status(false).message("파일 전송에 실패했습니다.").build();
+            }
             LocalDate endTime = LocalDate.now().plusDays(data.getTime());
             MemberInfoEntity entity = MemberInfoEntity.builder()
-            .miId(data.getId()).miPwd(data.getPwd()).miName(data.getName()).miBirth(data.getBirth())
+            .miId(data.getId()).miPwd(AESAlgorithm.Encrypt(data.getPwd())).miName(data.getName()).miBirth(data.getBirth()).miImg(saveFilePath)
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
-            .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater()).miStartTime(LocalDate.now()).miToken(data.getToken()).build();
+            .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater())
+            .miStartTime(LocalDate.now()).miToken(data.getToken()).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();
@@ -243,8 +252,8 @@ public class HiaMemberService {
         return response;
     }
 
-    // 회원 이미지 등록
-    public HiaResponseVO addImgFile(MultipartFile file, String token){
+    // 회원 이미지 수정
+    public HiaResponseVO updateImgFile(MultipartFile file, String token){
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         String saveFilePath = "";
