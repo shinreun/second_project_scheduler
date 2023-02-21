@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DhListResponseVO2 {
-    private Long miSeq;
+   private Long miSeq;
 
-    private Long pillSeq;
-    private String pillName;
-    private Integer pillAmount;
+   private Long pillSeq;
+   private String pillName;
+   private Integer pillAmount;
 
 }

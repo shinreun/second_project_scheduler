@@ -64,8 +64,7 @@ public class DhPillAPIController {
         return new ResponseEntity<>(piService.deletePillInfo(token, piSeq, piName), HttpStatus.OK);
     }
 
-    // 조회 - 일단 성공
-
+    // 약 조회
     @Operation(summary = "약 조회 ", description = "회원이 현재 섭취중인 약을 조회합니다.")
     @GetMapping("/info")
     public ResponseEntity<DhListResponseVO> getPillInfo(
@@ -74,6 +73,7 @@ public class DhPillAPIController {
         return new ResponseEntity<>(piService.getPillInfo(miSeq), HttpStatus.OK);
     }
 
+    // 약 성공 여부 조회
     @Operation(summary = "약 성공 여부 조회", description = "섭취에 성공한 약을 조회합니다.")
     @GetMapping("/info/success")
     public ResponseEntity<DhResponseVO> getSuccessPillInfo(
