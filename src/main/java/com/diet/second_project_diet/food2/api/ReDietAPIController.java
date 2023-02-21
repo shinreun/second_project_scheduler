@@ -23,6 +23,7 @@ import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
 import com.diet.second_project_diet.food2.vo.ReGetDailyDietResponseVO;
 import com.diet.second_project_diet.food2.vo.ReStatusAndMessageResponseVO;
 import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteVO;
+import com.diet.second_project_diet.food2.vo.ReDietCalorieResponseVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

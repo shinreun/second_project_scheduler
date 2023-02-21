@@ -36,7 +36,7 @@ public class HiaAddMemberInfoVO {
     @Schema(description = "목표 칼로리", example = "1500")
     private Integer cal;
     @Schema(description = "목표 몸무게", example = "1500")
-    private Integer kg;
+    private Double kg;
     @Schema(description = "목표 음수량", example = "8")
     private Integer water;
     @Schema(description = "목표 기간", example = "100")
