@@ -1,4 +1,4 @@
-package com.diet.second_project_diet.food2.vo;
+package com.diet.second_project_diet.food.vo;
 
 import java.time.LocalDate;
 

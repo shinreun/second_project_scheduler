@@ -1,4 +1,4 @@
-package com.diet.second_project_diet.food2.api;
+package com.diet.second_project_diet.food.api;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diet.second_project_diet.food2.service.ReFileService;
-import com.diet.second_project_diet.food2.service.ReDietService;
-import com.diet.second_project_diet.food2.vo.ReDietCalorieExInsertVO;
-import com.diet.second_project_diet.food2.vo.ReDietCalorieInsertResponseVO;
-import com.diet.second_project_diet.food2.vo.ReDietCalorieResponseVO;
+import com.diet.second_project_diet.food.service.ReDietService;
+import com.diet.second_project_diet.food.service.ReFileService;
+import com.diet.second_project_diet.food.vo.ReDietCalorieExInsertVO;
+import com.diet.second_project_diet.food.vo.ReDietCalorieInsertResponseVO;
+import com.diet.second_project_diet.food.vo.ReDietCalorieResponseVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,4 +1,4 @@
-package com.diet.second_project_diet.food2.api;
+package com.diet.second_project_diet.food.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diet.second_project_diet.food2.service.ReDietService;
-import com.diet.second_project_diet.food2.vo.ReDietSuggestInsertVO;
-import com.diet.second_project_diet.food2.vo.ReDietInsertResponseVO;
-import com.diet.second_project_diet.food2.vo.ReDietSuggestResponseVO;
-import com.diet.second_project_diet.food2.vo.ReDietSuggestWeeklyFinalVO;
+import com.diet.second_project_diet.food.service.ReDietService;
+import com.diet.second_project_diet.food.vo.ReDietInsertResponseVO;
+import com.diet.second_project_diet.food.vo.ReDietSuggestInsertVO;
+import com.diet.second_project_diet.food.vo.ReDietSuggestResponseVO;
+import com.diet.second_project_diet.food.vo.ReDietSuggestWeeklyFinalVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
