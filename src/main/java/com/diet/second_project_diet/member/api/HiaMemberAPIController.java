@@ -35,8 +35,8 @@ public class HiaMemberAPIController {
     @Operation(summary = "회원정보 조회", description = "마이페이지에서 회원정보 조회기능")
     @GetMapping("/info")
     public ResponseEntity<HiaDataResponseVO> getMemberInfo(
-        @Parameter(description = "회원번호", example="1") @RequestParam Long seq){
-        return new ResponseEntity<>(mService.getMemberInfo(seq), HttpStatus.ACCEPTED);
+        @Parameter(description = "회원토큰", example="1") @RequestParam String token){
+        return new ResponseEntity<>(mService.getMemberInfo(token), HttpStatus.ACCEPTED);
     }    
 
     @Operation(summary = "회원정보 등록", description = "회원정보 등록(회원가입)")
@@ -47,46 +47,52 @@ public class HiaMemberAPIController {
 
     @Operation(summary = "목표 칼로리 변경", description = "회원별 목표 칼로리 변경")
     @PatchMapping("/update/kcal")
-    public ResponseEntity<HiaResponseVO> patchGoalKcal(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.updateGoalKcal(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchGoalKcal(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.updateGoalKcal(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표  몸무게 변경", description = "회원별 목표 몸무게 변경")
     @PatchMapping("/update/kg")
-    public ResponseEntity<HiaResponseVO> patchGoalKg(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.updateGoalKg(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchGoalKg(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.updateGoalKg(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 음수량 변경", description = "회원별 목표 음수량 변경")
     @PatchMapping("/update/water")
-    public ResponseEntity<HiaResponseVO> patchGoalWater(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.updateGoalWater(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchGoalWater(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.updateGoalWater(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 날짜 변경", description = "회원별 목표 날짜 변경")
     @PatchMapping("/update/day")
-    public ResponseEntity<HiaResponseVO> patchGoalDay(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.updateGoalDay(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchGoalDay(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.updateGoalDay(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 다이어트 강도 변경", description = "회원별 목표 다이어트 강도 변경")
     @PatchMapping("/update/hard")
-    public ResponseEntity<HiaResponseVO> patchHard(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.updateHard(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchHard(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.updateHard(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원탈퇴 시 상태 값 변경")
     @PatchMapping("/delete")
-    public ResponseEntity<HiaResponseVO> patchMemberStatus(@RequestBody HiaUpdateMemberInfoVO data){
-        return new ResponseEntity<>(mService.deleteMember(data), HttpStatus.ACCEPTED);
+    public ResponseEntity<HiaResponseVO> patchMemberStatus(@RequestBody HiaUpdateMemberInfoVO data,
+    @Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<>(mService.deleteMember(data, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "D-Day 출력", description = "회원번호 입력 하면 D-Day 계산")
     @GetMapping("/dDay")
     public ResponseEntity<HiaTimeResponseVO> getDday(
-        @Parameter(description = "회원번호", example = "1") @RequestParam Long seq
+        @Parameter(description = "회원 토큰", example = "1") @RequestParam String token
     ) throws Exception{
-        return new ResponseEntity<>(mService.dday(seq), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.dday(token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "회원 이미지 등록", description = "토큰을 통해 회원 이미지 등록")

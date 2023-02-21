@@ -76,8 +76,8 @@ public class mgWaterController {
       }
          // 멤버별 입력 -> 달성율&성공여부 출력
          @GetMapping("/goal")
-         public ResponseEntity<mgGoalResponseVO> getDdayGoal(@RequestParam Long miSeq) throws Exception {
-            return new ResponseEntity<>(wService.goalWater(miSeq), HttpStatus.ACCEPTED);
+         public ResponseEntity<mgGoalResponseVO> getDdayGoal(@RequestParam String token) throws Exception {
+            return new ResponseEntity<>(wService.goalWater(token), HttpStatus.ACCEPTED);
          }
          // 캘린더 물 조회
          @GetMapping("/month")
