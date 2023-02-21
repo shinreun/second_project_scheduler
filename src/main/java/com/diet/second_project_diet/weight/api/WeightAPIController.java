@@ -13,6 +13,7 @@ import com.diet.second_project_diet.weight.vo.ReGetWeightResponseVO;
 import com.diet.second_project_diet.weight.vo.ReStatusAndMessageResponseVO;
 import com.diet.second_project_diet.weight.vo.ReWeightDifferneceResponseVO;
 import com.diet.second_project_diet.weight.vo.ReGetWeightResponseByTermVO;
+import com.diet.second_project_diet.weight.vo.ReWeightCompareVO;
 
 import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ public class WeightAPIController {
 
   @Operation(summary = "몸무게 추가 및 수정", description = "오늘의 몸무게를 등록/ 이미 몸무게가 등록되어있다면 수정합니다.")
   @PutMapping("/add")
-  public ResponseEntity<ReGetWeightResponseVO> putDailyDiet(
+  public ResponseEntity<ReGetWeightResponseVO> putWeight(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "몸무게", example = "60") @RequestParam Double weight
   ) {
@@ -38,7 +39,7 @@ public class WeightAPIController {
   
   @Operation(summary = "몸무게 수정", description = "몸무게 seq번호를 통해 몸무게를 수정합니다.")
   @GetMapping("/update")
-  public ResponseEntity<ReGetWeightResponseVO>  updateDailyDiet(
+  public ResponseEntity<ReGetWeightResponseVO>  updateWeight(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "조회하고 싶은 몸무게 seq 번호", example = "1") @RequestParam Long weiSeq, 
       @Parameter(description = "수정하고 싶은 몸무게", example = "55") @RequestParam Double weight
@@ -48,7 +49,7 @@ public class WeightAPIController {
 
   @Operation(summary = "몸무게 조회", description = "해당일자의 몸무게를 조회합니다.")
   @GetMapping("/list/day")
-  public ResponseEntity<ReGetWeightResponseVO>  getDailyDiet(
+  public ResponseEntity<ReGetWeightResponseVO>  getWeight(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "조회하고 싶은 날짜", example = "2023-02-15") @RequestParam LocalDate date
     ) {
@@ -57,7 +58,7 @@ public class WeightAPIController {
   
   @Operation(summary = "몸무게 삭제", description = "몸무게 seq번호를 통해 몸무게를 삭제합니다.")
   @GetMapping("/delete")
-  public ResponseEntity<ReStatusAndMessageResponseVO>  deleteDailyDiet(
+  public ResponseEntity<ReStatusAndMessageResponseVO>  deleteWeight (
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "삭제하고 싶은 몸무게 seq 번호", example = "1") @RequestParam Long weiSeq
   ) {
@@ -66,7 +67,7 @@ public class WeightAPIController {
   
   @Operation(summary = "일주일 간 몸무게 조회", description = "날짜를 통해 일주일간의 몸무게를 조회합니다.")
   @GetMapping("/list/week")
-  public ResponseEntity<ReGetWeightResponseByTermVO> getWeeklyDiet(
+  public ResponseEntity<ReGetWeightResponseByTermVO> getWeeklyWieght(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "기준 날짜 (해당일을 포함한 일주일)", example = "2023-02-15") @RequestParam LocalDate date
   ) {
@@ -75,7 +76,7 @@ public class WeightAPIController {
 
   @Operation(summary = "한달 간 몸무게 조회", description = "날짜를 통해 한달간의 몸무게를 조회합니다.")
   @GetMapping("/list/month")
-  public ResponseEntity<ReGetWeightResponseByTermVO> getMonthlyDiet(
+  public ResponseEntity<ReGetWeightResponseByTermVO> getMonthlyWeight(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token,
       @Parameter(description = "기준 날짜 (해당일을 포함한 한달)", example = "2023-02-15") @RequestParam LocalDate date
   ) {
@@ -84,10 +85,16 @@ public class WeightAPIController {
   
   @Operation(summary = "몸무게와 변화량 조회", description = "회원의 모든 몸무게 데이터와 그 변화량을 조회합니다.")
   @GetMapping("/list/diff")
-  public ResponseEntity<ReWeightDifferneceResponseVO> getMonthlyDiet(
+  public ResponseEntity<ReWeightDifferneceResponseVO> getAllWeightAndDiff(
       @Parameter(description = "회원 토큰", example = "1") @RequestParam String token) {
     return new ResponseEntity<>(weightService.getWeightDifference(token), HttpStatus.OK);
   }
   
+  @Operation(summary = "목표무게, 현재무게, 변화량 출력", description = "회원의 목표 무게와 가장 최근에 등록된 무게, 그 직전 무게와의 변화량을 출력합니다.")
+  @GetMapping("/compare")
+  public ResponseEntity<ReWeightCompareVO> getGoalDiffWeight(
+      @Parameter(description = "회원 토큰", example = "1") @RequestParam String token) {
+    return new ResponseEntity<>(weightService.getWeightCompare(token), HttpStatus.OK);
+  }
 
 }

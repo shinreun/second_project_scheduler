@@ -1,9 +1,6 @@
 package com.diet.second_project_diet.weight.sevice;
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +13,7 @@ import com.diet.second_project_diet.weight.vo.ReDiffWeightResponseVO;
 import com.diet.second_project_diet.weight.vo.ReGetWeightResponseByTermVO;
 import com.diet.second_project_diet.weight.vo.ReGetWeightResponseVO;
 import com.diet.second_project_diet.weight.vo.ReStatusAndMessageResponseVO;
+import com.diet.second_project_diet.weight.vo.ReWeightCompareVO;
 import com.diet.second_project_diet.weight.vo.ReWeightDifferneceResponseVO;
 
 import lombok.RequiredArgsConstructor;
@@ -71,7 +69,7 @@ public class WeightService {
     } else {
       data.setWeiWeight(weight);
       weightRepo.save(data);
-      List<WeightInfoEntity> list = weightRepo.findByOrderByWeiDate();
+      List<WeightInfoEntity> list = weightRepo.findByMemberOrderByWeiDate(member);
       for (int i = 0; i < list.size(); i++) {
         if (list.get(i)==data){
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
@@ -93,7 +91,7 @@ public class WeightService {
     } else if (weight == null) {
       response = ReGetWeightResponseVO.builder().diff(null).data(null).message("등록된 몸무게가 없습니다.").status(false).build();
     } else {
-      List<WeightInfoEntity> list = weightRepo.findByOrderByWeiDate();
+      List<WeightInfoEntity> list = weightRepo.findByMemberOrderByWeiDate(member);
       for (int i = 0; i < list.size(); i++) {
         if (list.get(i) == weight) {
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
@@ -156,17 +154,15 @@ public class WeightService {
   // 체중 변화값 출력
   public ReWeightDifferneceResponseVO getWeightDifference(String token) {
     MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
-    List<WeightInfoEntity> list = weightRepo.findByOrderByWeiDate();
+    List<WeightInfoEntity> list = weightRepo.findByMemberOrderByWeiDate(member);
     ReWeightDifferneceResponseVO response = new ReWeightDifferneceResponseVO();
     if (member == null) {
       response = ReWeightDifferneceResponseVO.builder().data(null)
-      .message("로그인 한 회원만 이용가능합니다.").status(false).build();
-    }
-    else if (list == null) {
+          .message("로그인 한 회원만 이용가능합니다.").status(false).build();
+    } else if (list == null) {
       response = ReWeightDifferneceResponseVO.builder().data(null)
           .message("등록된 체중이 존재하지 않습니다.").status(false).build();
-    }
-    else {
+    } else {
       List<ReDiffWeightResponseVO> diffList = new ArrayList<>();
       for (int i = 0; i < list.size(); i++) {
         if (i == 0) {
@@ -174,8 +170,7 @@ public class WeightService {
               .weiSeq(list.get(i).getWeiSeq())
               .weiWeight(list.get(i).getWeiWeight()).weiDate(list.get(i).getWeiDate()).build();
           diffList.add(diff);
-        }
-        else {
+        } else {
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
           ReDiffWeightResponseVO diff = ReDiffWeightResponseVO.builder().difference(difference)
               .weiSeq(list.get(i).getWeiSeq())
@@ -188,4 +183,27 @@ public class WeightService {
     }
     return response;
   }
+  
+  // 현재무게, 목표무게, 변화량 출력
+  public ReWeightCompareVO getWeightCompare(String token) {
+    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+    List<WeightInfoEntity> list = weightRepo.findByMemberOrderByWeiDate(member);
+    ReWeightCompareVO response = new ReWeightCompareVO();
+    if (member == null) {
+      response = ReWeightCompareVO.builder().diff(null).goalWeight(null).nowWeight(null)
+          .message("로그인 한 회원만 이용가능합니다.").status(false).build();
+    } else if (list == null) {
+      response = ReWeightCompareVO.builder().diff(null).goalWeight(member.getMiGoalKg()).nowWeight(null)
+          .message("등록된 체중이 존재하지 않습니다.").status(false).build();
+    } else {
+      // 날짜 순으로 정렬된 값이니까 마지막 값이 오늘 체중 - 직전 값이 = 변화량, 목표 량은 멤버에서 가져오기
+      response = ReWeightCompareVO.builder()
+        .diff((list.get(list.size() - 1).getWeiWeight()) - (list.get(list.size() - 2).getWeiWeight()))
+          .goalWeight(member.getMiGoalKg())
+          .nowWeight(list.get(list.size()-1).getWeiWeight())
+        .message("체중이 출력되었습니다.").status(true).build();
+     }
+    return response;
+  }
+
 }
