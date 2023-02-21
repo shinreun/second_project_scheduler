@@ -1,4 +1,5 @@
 package com.diet.second_project_diet.repository;
+import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface WeightInfoRepository extends JpaRepository<WeightInfoEntity, Lo
 
   WeightInfoEntity findByMemberAndWeiSeq(MemberInfoEntity member, Long weiSeq);
   
-  List<WeightInfoEntity> findByOrderByWeiDate();
+  List<WeightInfoEntity> findByMemberOrderByWeiDate(MemberInfoEntity member);
 
   @Query(value = "select a from WeightInfoEntity a where week(a.weiDate) = week(:date) order by a.weiDate")
   List<WeightInfoEntity> weightListByWeek(@Param("date") LocalDate date);

@@ -3,11 +3,8 @@ package com.diet.second_project_diet.food2.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +15,6 @@ import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.entity.DietCalorieExEntity;
-import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
 import com.diet.second_project_diet.food2.vo.ReDietSuggestInsertVO;
 import com.diet.second_project_diet.food2.vo.ReGetDailyDietResponseVO;
@@ -37,7 +33,6 @@ import com.diet.second_project_diet.repository.DietSuggestRepository;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DietCalorieExRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
-import com.diet.second_project_diet.repository.MemoInfoRepository;
 import com.diet.second_project_diet.repository.MemoInfoRepository;
 
 import lombok.RequiredArgsConstructor;

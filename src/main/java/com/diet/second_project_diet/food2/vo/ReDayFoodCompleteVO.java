@@ -1,6 +1,4 @@
 package com.diet.second_project_diet.food2.vo;
-import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
-import com.diet.second_project_diet.food2.vo.ReDayFoodCompleteResponseVO;
 import lombok.AllArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
