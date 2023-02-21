@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 public class ReGetDailyDietResponseVO {
   @Schema(description = "오늘 하루 식단")
   private List<DayFoodEntity> list;
+  @Schema(description = "메모 내용")
+  private String memo;
   @Schema(description = "상태값", example = "true")
   private Boolean status;
   @Schema(description = "메시지", example = "메시지입니다")

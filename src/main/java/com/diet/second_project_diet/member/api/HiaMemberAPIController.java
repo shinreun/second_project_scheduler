@@ -51,6 +51,12 @@ public class HiaMemberAPIController {
         return new ResponseEntity<>(mService.updateGoalKcal(data), HttpStatus.ACCEPTED);
     }
 
+    @Operation(summary = "목표  몸무게 변경", description = "회원별 목표 몸무게 변경")
+    @PatchMapping("/update/kg")
+    public ResponseEntity<HiaResponseVO> patchGoalKg(@RequestBody HiaUpdateMemberInfoVO data){
+        return new ResponseEntity<>(mService.updateGoalKg(data), HttpStatus.ACCEPTED);
+    }
+
     @Operation(summary = "목표 음수량 변경", description = "회원별 목표 음수량 변경")
     @PatchMapping("/update/water")
     public ResponseEntity<HiaResponseVO> patchGoalWater(@RequestBody HiaUpdateMemberInfoVO data){
@@ -61,6 +67,12 @@ public class HiaMemberAPIController {
     @PatchMapping("/update/day")
     public ResponseEntity<HiaResponseVO> patchGoalDay(@RequestBody HiaUpdateMemberInfoVO data){
         return new ResponseEntity<>(mService.updateGoalDay(data), HttpStatus.ACCEPTED);
+    }
+
+    @Operation(summary = "목표 다이어트 강도 변경", description = "회원별 목표 다이어트 강도 변경")
+    @PatchMapping("/update/hard")
+    public ResponseEntity<HiaResponseVO> patchHard(@RequestBody HiaUpdateMemberInfoVO data){
+        return new ResponseEntity<>(mService.updateHard(data), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원탈퇴 시 상태 값 변경")

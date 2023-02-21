@@ -39,4 +39,5 @@ public class MemberInfoEntity {
   @Column(name = "mi_water") private Integer miWater;
   @Column(name = "mi_token") private String miToken;
   @Column(name = "mi_img") private String miImg;
+  @Column(name = "mi_goal_kg") private Integer miGoalKg;
 }

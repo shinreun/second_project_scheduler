@@ -16,6 +16,7 @@ import com.diet.second_project_diet.entity.DayFoodEntity;
 import com.diet.second_project_diet.entity.DietSuggestEntity;
 import com.diet.second_project_diet.entity.DayFoodCompleteEntity;
 import com.diet.second_project_diet.entity.MemberInfoEntity;
+import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.entity.DietCalorieExEntity;
 import com.diet.second_project_diet.entity.MemoInfoEntity;
 import com.diet.second_project_diet.food2.vo.ReDietInsertVO;
@@ -36,6 +37,7 @@ import com.diet.second_project_diet.repository.DietSuggestRepository;
 import com.diet.second_project_diet.repository.DayFoodCompleteRepository;
 import com.diet.second_project_diet.repository.DietCalorieExRepository;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
+import com.diet.second_project_diet.repository.MemoInfoRepository;
 import com.diet.second_project_diet.repository.MemoInfoRepository;
 
 import lombok.RequiredArgsConstructor;

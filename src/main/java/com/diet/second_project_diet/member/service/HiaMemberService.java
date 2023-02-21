@@ -74,6 +74,10 @@ public class HiaMemberService {
             response = HiaResponseVO.builder()
             .status(false).message("목표 칼로리를 입력하세요.").build();
         }
+        else if(data.getCal() == null){
+            response = HiaResponseVO.builder()
+            .status(false).message("목표 몸무게를 입력하세요.").build();
+        }
         else if(data.getWater() == null){
             response = HiaResponseVO.builder()
             .status(false).message("목표 음수량을 입력하세요.").build();
@@ -91,7 +95,7 @@ public class HiaMemberService {
             MemberInfoEntity entity = MemberInfoEntity.builder()
             .miId(data.getId()).miPwd(data.getPwd()).miName(data.getName()).miBirth(data.getBirth())
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
-            .miHard(data.getHard()).miKcal(data.getCal()).miWater(data.getWater()).miStartTime(LocalDate.now()).miToken(data.getToken()).build();
+            .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater()).miStartTime(LocalDate.now()).miToken(data.getToken()).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();
@@ -113,6 +117,24 @@ public class HiaMemberService {
             mRepo.save(m);
             response = HiaResponseVO.builder()
             .status(true).message("목표 칼로리가 변경되었습니다.").build();
+        }
+        return response;
+    }
+
+    // 목표 몸무게 수정
+    public HiaResponseVO updateGoalKg(HiaUpdateMemberInfoVO data){
+        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+        HiaResponseVO response = new HiaResponseVO();
+        if(entity.isEmpty()){
+            response = HiaResponseVO.builder()
+            .status(false).message("회원번호를 확인해주세요.").build();
+        }
+        else{
+            MemberInfoEntity m = entity.get();
+            m.setMiGoalKg(data.getKg());
+            mRepo.save(m);
+            response = HiaResponseVO.builder()
+            .status(true).message("목표 몸무게가 변경되었습니다.").build();
         }
         return response;
     }
@@ -160,6 +182,24 @@ public class HiaMemberService {
         }
         return response;
     }
+
+    // 다이어트 강도 수정
+    public HiaResponseVO updateHard(HiaUpdateMemberInfoVO data){
+        Optional<MemberInfoEntity> entity = mRepo.findById(data.getSeq());
+        HiaResponseVO response = new HiaResponseVO();
+        if(entity.isEmpty()){
+            response = HiaResponseVO.builder()
+            .status(false).message("회원번호를 확인해주세요.").build();
+        }
+        else{
+            MemberInfoEntity m = entity.get();
+            m.setMiHard(data.getHard());
+            mRepo.save(m);
+            response = HiaResponseVO.builder()
+            .status(true).message("다이어트 강도가 변경되었습니다.").build();
+        }
+        return response;
+    } 
 
     // 회원 탈퇴
     public HiaResponseVO deleteMember(HiaUpdateMemberInfoVO data){
