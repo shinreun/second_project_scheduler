@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
 
 import com.diet.second_project_diet.entity.MemberInfoEntity;
@@ -111,13 +112,13 @@ public class DhPillInfoService {
       return response;
    }
 
-   public DhListResponseVO getPillInfo(Long miSeq) {
+   public DhListResponseVO getPillInfo(String token) {
       // listResponse 에 VO데이터를 저장함
       DhListResponseVO listResponse = new DhListResponseVO();
       // listResponse2 에 내보내줄 데이터를 지정해줌
       DhListResponseVO2 listResponse2 = new DhListResponseVO2();
       // member에 miSeq 검색결과를 저장
-      MemberInfoEntity member = memberRepo.findByMiSeq(miSeq);
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
 
       // 일치하는 데이터가 pEntity 여기 들어가있음 (member, piStatus)
       List<PillInfoEntity> pEntity = pillRepo.findByMemberAndPiStatus(member, 0);
@@ -155,23 +156,30 @@ public class DhPillInfoService {
       return listResponse;
    }
 
-   public DhResponseVO getPillInfo2(LocalDate picDate, Long miSeq) {
+   public DhResponseVO getPillInfo2(LocalDate picDate, String token) {
       // 멤버 찾기
-      MemberInfoEntity member = memberRepo.findByMiSeq(miSeq);
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
       DhResponseVO response = new DhResponseVO();
       // 멤버 없을때 처리 나중에 하기
 
       List<PillInfoEntity> pEntity = pillRepo.findByMemberAndPiStatus(member, 0);
       List<DhListResponseVO2> VO2List = new ArrayList<>();
 
-      if (pEntity.isEmpty()) {
+      if (member == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("등록된 사용자가 아닙니다.")
+                 .build();
+         return response;
+      }
+      else if (pEntity.isEmpty()) {
          response = DhResponseVO.builder()
                  .status(false).message("조회된 정보가 없습니다.").build();
       } else {
          Integer a = 0;
          for (int i = 0; i < pEntity.size(); i++) {
             PillInfoEntity pill = pillRepo.findByPiSeq(pEntity.get(i).getPiSeq());
-            if (pcRepo.countByPillAndPicGoalAndPicDate(pill, 1, picDate) != 0) {
+            if (pcRepo.countByPillAndPicGoalAndPicDate(pill, 0, picDate) != 0) {
                a++;
             }
          }
@@ -186,6 +194,96 @@ public class DhPillInfoService {
                     .message("등록하신 약을 모두 섭취하셨습니다.")
                     .build();
          }
+      }
+      return response;
+   }
+
+   // 약 하나 먹은갯수 카운트 증가
+   public DhResponseVO updatePlusPill(String token, Long seq, LocalDate date) {
+      DhResponseVO response = new DhResponseVO();
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+      PillInfoEntity pill = pillRepo.findByPiSeq(seq);
+      PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, date);
+
+
+      if( member == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("일치하는 회원 정보가없습니다.")
+                 .build();
+         return response;
+      }
+      else if (pillComplete == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("설정할 약이 없습니다.").build();
+         return response;
+      }
+      else {
+         if (pillComplete.getPicTotal() >= pill.getPiAmount()) {
+            response = DhResponseVO.builder()
+                    .status(false)
+                    .message("일일 복용량을 초과하였습니다")
+                    .build();
+            return response;
+         }
+         else {
+            // Boolean success = false;
+            Integer status = 0;
+            if (pillComplete.getPicTotal()+1 >= pill.getPiAmount()) {
+               status = 1;
+            }
+            pillComplete.setPicTotal(pillComplete.getPicTotal()+1);
+            pillComplete.setPicGoal(status);
+            pcRepo.save(pillComplete);
+            response = DhResponseVO.builder()
+                    .status(true)
+                    .message("복용량이 1 증가하였습니다.")
+                    .build();
+            return response;
+         }
+      }
+   }
+
+   // 약 하나 먹은갯수 카운트 감소
+   public DhResponseVO updateMinusPill(String token, Long seq, LocalDate date) {
+      DhResponseVO response = new DhResponseVO();
+
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+      PillInfoEntity pill = pillRepo.findByPiSeq(seq);
+      PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, date);
+
+      if( member == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("일치하는 회원 정보가없습니다.")
+                 .build();
+         return response;
+      }
+      else if (pillComplete == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("설정할 약이 없습니다.").build();
+         return response;
+      }
+      else if(pillComplete.getPicTotal() <= 0){
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("약을 복용하지 않았습니다.")
+                 .build();
+         return response;
+      }
+
+      else if (pillComplete.getPicTotal() > 0) {
+         pillComplete.setPicTotal(pillComplete.getPicTotal()-1);
+         pillComplete.setPicGoal(0);
+         pcRepo.save(pillComplete);
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("복용량을 1 감소 시켰습니다.")
+                 .build();
+
+
       }
       return response;
    }

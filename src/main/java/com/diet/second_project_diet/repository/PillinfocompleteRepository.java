@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import com.diet.second_project_diet.entity.MemberInfoEntity;
 import lombok.Data;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.diet.second_project_diet.entity.PillInfoCompleteEntity;
@@ -16,4 +17,8 @@ public interface PillinfocompleteRepository extends JpaRepository<PillInfoComple
 
     public Integer countByPillAndPicGoalAndPicDate(PillInfoEntity pill, Integer goal, LocalDate picDate);
 
+    // pill 섭취량 수정 기능 만드는중
+    // public List<PillInfoEntity> findByMemberAndPiStatus(MemberInfoEntity member, Integer piStatus);
+    // public PillInfoCompleteEntity findByPillAndPicDate(PillInfoEntity pill, LocalDate picDate);
+    public PillInfoCompleteEntity findByPillAndPicDate(PillInfoEntity pill, LocalDate picDate);
 }
