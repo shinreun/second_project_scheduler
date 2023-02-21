@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DhListResponseVO {
-    private boolean status;
-    private String message;
-    private List<DhListResponseVO2> list;
+   private boolean status;
+   private String message;
+   private List<DhListResponseVO2> list;
 
 }

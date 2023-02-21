@@ -3,6 +3,7 @@ package com.diet.second_project_diet.food2.api;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import io.micrometer.common.lang.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
@@ -146,7 +147,7 @@ public class ReDietAPIController {
   @Operation(summary = "식단 예시 검색 기능", description = "키워드를 포함하고 있는 식단예시를 검색합니다.")
   @GetMapping("/search/cal") 
   public ResponseEntity<ReDietCalorieResponseVO> addDietByCalEx(
-      @Parameter(description = "검색 키워드", example = "닭") String keyword) {
+      @Parameter(description = "검색 키워드", example = "닭") @Nullable String keyword) {
     return new ResponseEntity<>(dService.searchCalorieEx(keyword), HttpStatus.OK);
   }
   

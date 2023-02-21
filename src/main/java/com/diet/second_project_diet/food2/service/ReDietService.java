@@ -470,6 +470,9 @@ public class ReDietService {
 
   // 식단 예시 검색 기능
   public ReDietCalorieResponseVO searchCalorieEx(String keyword) {
+    if(keyword == null){
+      keyword = "";
+    }
     List<DietCalorieExEntity> cal = calRepo.findByDceContentContains(keyword);
     ReDietCalorieResponseVO response = new ReDietCalorieResponseVO();
     if (cal.isEmpty()) {
