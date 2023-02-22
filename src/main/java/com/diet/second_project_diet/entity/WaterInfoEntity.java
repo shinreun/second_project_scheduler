@@ -2,6 +2,8 @@ package com.diet.second_project_diet.entity;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +28,7 @@ public class WaterInfoEntity {
   @Id @GeneratedValue (strategy = GenerationType.IDENTITY) 
   @Schema(description = "물 정보 seq 번호", example = "1")
   @Column(name = "wi_seq") private Long wiSeq;
+  @JsonIgnore
   @Schema(description = "회원 정보 seq 번호", example = "1")
   @ManyToOne @JoinColumn(name = "wi_mi_seq") MemberInfoEntity member;
   // @Column(name = "wi_mi_seq") private Long wiMiSeq;

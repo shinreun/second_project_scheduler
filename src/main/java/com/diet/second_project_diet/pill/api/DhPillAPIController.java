@@ -1,6 +1,6 @@
 package com.diet.second_project_diet.pill.api;
 
-import com.diet.second_project_diet.water.vo.mgWaterResponseVO;
+
 import io.micrometer.common.lang.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

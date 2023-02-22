@@ -38,8 +38,10 @@ public class mgWaterService {
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         WaterInfoEntity entity = wRepo.findByMemberAndWiDate(member, date);
         if(entity == null){
+            entity = WaterInfoEntity.builder().wiDate(date).member(member).wiCount(1).wiGoal(false).build();
             mgUpDownResponseVO response = mgUpDownResponseVO.
-            builder() .status(false).message("음수량은 설정할 수 없습니다.").build();
+            builder() .status(false).message("오늘도 활기차게 물을 마셔봅시다 ! ").build();
+            wRepo.save(entity);
             return response;
             }
         else {
@@ -71,8 +73,10 @@ public class mgWaterService {
 
         mgUpDownResponseVO response = new mgUpDownResponseVO();
         if(entity == null){
+            entity=WaterInfoEntity.builder().wiDate(date).member(member).wiCount(0).wiGoal(false).build();
             response = mgUpDownResponseVO.
-            builder() .status(false).message("음수량은 설정할 수 없습니다.").build();
+            builder() .status(false).message("물을 마시고 눌러주세요~").build();
+            wRepo.save(entity);
         }
         else if(entity.getWiCount()>0){
             entity.setWiCount(entity.getWiCount()-1);
