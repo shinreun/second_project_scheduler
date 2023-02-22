@@ -93,7 +93,11 @@ public class WeightService {
     } else {
       List<WeightInfoEntity> list = weightRepo.findByMemberOrderByWeiDate(member);
       for (int i = 0; i < list.size(); i++) {
-        if (list.get(i) == weight) {
+        if (list.get(0) == weight) {
+          response = ReGetWeightResponseVO.builder().diff(null).data(weight).diff(0.0).message("체중이 조회되었습니다.")
+              .status(true).build();
+        }
+        else if (list.get(i) == weight) {
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
           response = ReGetWeightResponseVO.builder().diff(null).data(weight).diff(difference).message("체중이 조회되었습니다.")
               .status(true).build();

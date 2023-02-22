@@ -25,8 +25,7 @@ import lombok.Builder;
 public class DayFoodCompleteEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "회원 식단 완료 정보 seq 번호", example = "1")
-  @Column(name = "dfc_seq")
-  private Long dfcSeq;
+  @Column(name = "dfc_seq") private Long dfcSeq;
   @Schema(description = "회원 정보")
   @ManyToOne @JoinColumn(name = "dfc_mi_seq") MemberInfoEntity member;
   // @Column (name = "dfc_mi_seq") private Long dfcMiSeq;
