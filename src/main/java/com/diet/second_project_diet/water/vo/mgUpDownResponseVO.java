@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class mgGoalResponseVO {
-    private String sucess;
+// 수정 증가에 쓰이는 responseVO
+public class mgUpDownResponseVO {
+    private Boolean status;
     private String message;
-    private Boolean Status;
-    
 }

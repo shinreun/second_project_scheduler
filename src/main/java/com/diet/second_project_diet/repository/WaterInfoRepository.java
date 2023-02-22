@@ -2,14 +2,13 @@ package com.diet.second_project_diet.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 import com.diet.second_project_diet.entity.WaterInfoEntity;
-import com.diet.second_project_diet.water.vo.mgWeekListWaterVO;
+import com.diet.second_project_diet.water.vo.mgWeekListVO;
 
 import org.springframework.data.domain.Pageable;
 

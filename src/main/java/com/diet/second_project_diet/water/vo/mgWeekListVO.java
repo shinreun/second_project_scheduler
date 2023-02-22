@@ -7,10 +7,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class mgWeekListWaterVO {
+public class mgWeekListVO {
     
     private String wiDate;
     private Integer wiCount;
-    private Boolean wiGoal; // 0: false 1: true
+    private Boolean wiGoal; 
     
 }
