@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class mgWeeklyListVO {
-    private List<mgWeekListWaterVO> list;
+public class mgWeekResponseVO {
+    private List<mgWeekListVO> list;
     private Boolean status;
     private String message;
 }

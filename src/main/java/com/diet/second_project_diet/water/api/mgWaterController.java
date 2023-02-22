@@ -25,11 +25,11 @@ import org.springframework.data.domain.Sort;
 
 import com.diet.second_project_diet.repository.WaterInfoRepository;
 import com.diet.second_project_diet.water.service.mgWaterService;
-import com.diet.second_project_diet.water.vo.mgWaterResponseVO;
-import com.diet.second_project_diet.water.vo.mgWeekListWaterVO;
-import com.diet.second_project_diet.water.vo.mgWeeklyListVO;
+import com.diet.second_project_diet.water.vo.mgUpDownResponseVO;
+import com.diet.second_project_diet.water.vo.mgWeekListVO;
+import com.diet.second_project_diet.water.vo.mgWeekResponseVO;
 import com.diet.second_project_diet.water.vo.mgDayWaterVO;
-import com.diet.second_project_diet.water.vo.mgGoalResponseVO;
+import com.diet.second_project_diet.water.vo.mgDdayResponseVO;
 import com.diet.second_project_diet.water.vo.mgMonthListVO;
 
 import org.springframework.ui.Model;
@@ -41,48 +41,48 @@ public class mgWaterController {
     @Autowired mgWaterService wService;
 
 
-    //수정  증가
-    @Operation(summary = "음수량 증가 및 수정", description = "목표 음수량 증가하면 자동으로 수정")
-     @PostMapping("/update") 
-     public ResponseEntity<mgWaterResponseVO > postUpdateWater(@RequestParam String token, LocalDate wiDate) {
-       //Map<String, Object> resultMap = wService.updateWater(wiSeq,wiDate);
-        return new ResponseEntity<>(wService.updateWater(token,wiDate),HttpStatus.ACCEPTED);
+    //하루 섭취량 수정 - 증가
+      @Operation(summary = "음수량 증가 및 수정", description = "목표 음수량 증가하면 자동으로 수정")
+      @PostMapping("/increase") 
+      public ResponseEntity<mgUpDownResponseVO > postIncreaseWater(@RequestParam String token, LocalDate wiDate) {
+        return new ResponseEntity<>(wService.increaseWater(token,wiDate),HttpStatus.ACCEPTED);
      }
-     // 수정 감소 
+     // 하루 섭취량 수정 - 감소 
      @Operation(summary = "음수량 감소 및 수정", description = "목표 음수량 감소하면 자동으로 수정")
-     @PostMapping("/minus") 
-     public ResponseEntity<mgWaterResponseVO> postMinusWater(@RequestParam String token, LocalDate wiDate ) {
-        // Map<String, Object> resultMap = wService.minusWater(wiSeq,wiDate);
-        return new ResponseEntity<>(wService.minusWater(token, wiDate), HttpStatus.ACCEPTED);
-        //return new ResponseEntity<> (wService.minusWater(wiSeq, wiDate) ,HttpStatus.ACCEPTED);
+     @PostMapping("/decrease") 
+     public ResponseEntity<mgUpDownResponseVO> postDecreaseWater(@RequestParam String token, LocalDate wiDate ) {
+        return new ResponseEntity<>(wService.decreaseWater(token, wiDate), HttpStatus.ACCEPTED);
      }
 
-         // 그냥 월~일 음수량..(조회)
+     // 요일별 달성여부 조회(주 단위)
+      @Operation(summary = "요일별(주단위) 음수 성공여부", description = "토큰 값을 이용하여 요일별(주단위) 성공여부")
+      @GetMapping("/week")
+      public ResponseEntity<mgWeekResponseVO> getWeekWaterList(
+      @Parameter(description = "회원 토큰") @RequestParam String token, @Parameter(description = "조회 일") LocalDate date) {
+         return new ResponseEntity<>(wService.weeklist(token, date), HttpStatus.ACCEPTED);
+   
+   }
+        // 하루 목표 음수량 조회 + 하루 달성율(%) 조회
       @Operation(summary = "하루 음수량 조회 및 달성률 조회", description = "토큰 값을 이용하여 해당일 음수량 조회")
       @GetMapping("/day")
       public ResponseEntity<mgDayWaterVO> getWaterList(
         @Parameter(description = "회원 토큰") @RequestParam String token, @Parameter(description = "조회 일") LocalDate date) {
-     
-      return new ResponseEntity<>(wService.weekWater(token, date), HttpStatus.ACCEPTED);
-      // 리턴을 잘못함. html 방법임. map 으로 변경하는 걸로 하기
+      return new ResponseEntity<>(wService.daylist(token, date), HttpStatus.ACCEPTED);
       }
 
-      @Operation(summary = "요일별 음수 성공여부", description = "토큰 값을 이용하여 요일별 성공여부")
-      @GetMapping("/week")
-      public ResponseEntity<mgWeeklyListVO> getWeekWaterList(
-        @Parameter(description = "회원 토큰") @RequestParam String token, @Parameter(description = "조회 일") LocalDate date) {
-      return new ResponseEntity<>(wService.weekWaterList(token, date), HttpStatus.ACCEPTED);
-      
-      }
-         // 멤버별 입력 -> 달성율&성공여부 출력
-         @GetMapping("/goal")
-         public ResponseEntity<mgGoalResponseVO> getDdayGoal(@RequestParam String token) throws Exception {
-            return new ResponseEntity<>(wService.goalWater(token), HttpStatus.ACCEPTED);
+         // d-day기준목표달성율과 성공여부
+      @Operation(summary = "D-DAY 기준 목표달성율과 성공여부", description = "회원번호를 이용하여 D-DAY 목표달성율 조회")
+      @GetMapping("/dday")
+      public ResponseEntity<mgDdayResponseVO> getDdayList(@RequestParam String token) throws Exception {
+         return new ResponseEntity<>(wService.ddaylist(token), HttpStatus.ACCEPTED);
          }
+
+
          // 캘린더 물 조회
-         @GetMapping("/month")
-         public ResponseEntity<mgMonthListVO> getMonthGoal(@RequestParam Long miSeq, Integer year, Integer month ) {
-            return new ResponseEntity<>(wService.monthWaterList(miSeq, year, month), HttpStatus.ACCEPTED);
+      @Operation(summary = "한달단위 음수 성공여부", description = "토큰 값을 이용하여 한달 성공여부 조회")
+      @GetMapping("/month")
+      public ResponseEntity<mgMonthListVO> getMonthList(@RequestParam String token, Integer year, Integer month ) {
+         return new ResponseEntity<>(wService.monthlist(token, year, month), HttpStatus.ACCEPTED);
          }
       }
 

@@ -1,19 +1,17 @@
 package com.diet.second_project_diet.water.vo;
 
-import jakarta.validation.OverridesAttribute.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class mgWaterResponseVO {
-    private Boolean status;
+public class mgDdayResponseVO {
+    private String sucess;
     private String message;
-   //private List<mgWaterListResponseVO> mgWaterListResponseVOList;
-
+    private Boolean Status;
     
 }
