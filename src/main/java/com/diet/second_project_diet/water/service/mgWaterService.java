@@ -150,8 +150,8 @@ public class mgWaterService {
         }
         
         // d-day기준목표달성율과 성공여부 // 인원이가 바까주면 바꾸깅 ! 
-    public mgDdayResponseVO ddaylist(Long miSeq) throws Exception {
-       MemberInfoEntity member = mRepo.findByMiSeq(miSeq);
+    public mgDdayResponseVO ddaylist(String token) throws Exception {
+       MemberInfoEntity member = mRepo.findByMiTokenIs(token);
        List<WaterInfoEntity> list = wRepo.findByMember(member);
        Integer sum = 0;
        Integer dday = 0;
