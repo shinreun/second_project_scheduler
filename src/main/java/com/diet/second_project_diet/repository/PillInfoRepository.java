@@ -17,6 +17,10 @@ public interface PillInfoRepository extends JpaRepository<PillInfoEntity, Long>{
     public List<PillInfoEntity> findByMember(MemberInfoEntity member);
     public List<PillInfoEntity> findByMemberAndPiStatus(MemberInfoEntity member, Integer piStatus);
 
+    public Integer countByMemberAndPiName(MemberInfoEntity member, String piName);
+
+    public PillInfoEntity findByPiSeqAndPiStatus(Long piSeq, Integer status);
+
     // public PillInfoCompleteEntity findByPicSeq(Long picSeq);
 
     // 출력 - sample 1차 프로젝트꺼 가져운거
