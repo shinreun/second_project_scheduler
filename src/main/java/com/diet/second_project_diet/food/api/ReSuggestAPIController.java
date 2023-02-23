@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ public class ReSuggestAPIController {
   @Operation(summary = "추천 식단 추가", description = "추천 식단을 등록합니다.")
   @PutMapping("/suggest/add")
   public ResponseEntity<ReDietInsertResponseVO> putSuggestDiet(
-      @Parameter(description = "추천 식단 정보") ReDietSuggestInsertVO data) {
+      @Parameter(description = "추천 식단 정보") @RequestBody ReDietSuggestInsertVO data) {
     return new ResponseEntity<>(dService.addDietSuggest(data), HttpStatus.OK);
   }
 
