@@ -105,17 +105,17 @@ public class DhPillAPIController {
    }
 
    // 작업중 - 한달단위로 조회
-   @Operation(summary = "약 한달단위로 조회", description = "회원이 현재 섭취중인 약을 한달 단위로 조회합니다.")
-   @GetMapping("/info/month")
-   public ResponseEntity<DhResponseVO> findMonthPillInfo(
-           // @RequestParam String token, LocalDate picDate
-           @Parameter(description = "회원 번호", example = "1") @RequestParam String token,
-           @Parameter(description = "약 번호", example = "1") @RequestParam Long seq
-           // @Parameter(description = "날짜", example = "2023-02-09") @RequestParam LocalDate date
-   ) {
-      // Map<String, Object> resultMap = wService.updateWater(wiSeq,wiDate);
-      return new ResponseEntity<>(piService.updateMinusPill(token, seq), HttpStatus.OK);
-   }
+   // @Operation(summary = "약 한달단위로 조회", description = "회원이 현재 섭취중인 약을 한달 단위로 조회합니다.")
+   // @GetMapping("/info/month")
+   // public ResponseEntity<DhResponseVO> findMonthPillInfo(
+   //         // @RequestParam String token, LocalDate picDate
+   //         @Parameter(description = "회원 번호", example = "1") @RequestParam String token,
+   //         @Parameter(description = "약 번호", example = "1") @RequestParam Long seq
+   //         // @Parameter(description = "날짜", example = "2023-02-09") @RequestParam LocalDate date
+   // ) {
+   //    // Map<String, Object> resultMap = wService.updateWater(wiSeq,wiDate);
+   //    return new ResponseEntity<>(piService.updateMinusPill(token, seq), HttpStatus.OK);
+   // }
 
 
 

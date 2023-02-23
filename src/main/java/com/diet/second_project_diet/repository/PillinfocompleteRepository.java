@@ -22,8 +22,8 @@ public interface PillinfocompleteRepository extends JpaRepository<PillInfoComple
 
     public PillInfoCompleteEntity findByPillAndPicDate(PillInfoEntity pill, LocalDate picDate);
 
-    @Query(value = "select a from PillInfoCompleteEntity a where year(a.picDate)=year(:date) and month(a.picDate)=month(:date) and a.pill =:pill order by a.picDate ")
-    public List<PillInfoCompleteEntity> findMonthlyCal(@Param("member") MemberInfoEntity member, @Param("date") LocalDate picDate);
+    // @Query(value = "select a from PillInfoCompleteEntity a where year(a.picDate)=year(:date) and month(a.picDate)=month(:date) and a.pill =:pill order by a.picDate ")
+    // public List<PillInfoCompleteEntity> findMonthlyCal(@Param("member") MemberInfoEntity member, @Param("date") LocalDate picDate);
 
 
 
