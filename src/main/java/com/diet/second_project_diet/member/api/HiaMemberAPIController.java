@@ -20,6 +20,8 @@ import com.diet.second_project_diet.member.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
+import com.diet.second_project_diet.member.vo.ReLoginRequestVO;
+import com.diet.second_project_diet.member.vo.ReLoginVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -102,7 +104,16 @@ public class HiaMemberAPIController {
     public ResponseEntity<HiaResponseVO> putImg(
         @Parameter(description = "사진 파일") MultipartFile file,
         @Parameter(description = "회원토큰") String token
-        ) {
-        return new ResponseEntity<>(mService.updateImgFile(file,token), HttpStatus.ACCEPTED);
+    ) {
+        return new ResponseEntity<>(mService.updateImgFile(file, token), HttpStatus.ACCEPTED);
     }
+    
+    @Operation(summary = "로그인", description = "아이디와 비밀번호를 통해 로그인")
+    @GetMapping("/login")
+    public ResponseEntity<ReLoginVO> Login(
+        @Parameter(description = "로그인 정보") ReLoginRequestVO data
+    ) {
+        return new ResponseEntity<>(mService.Login(data), HttpStatus.ACCEPTED);
+    }
+
 }

@@ -16,6 +16,8 @@ import com.diet.second_project_diet.member.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
 import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
+import com.diet.second_project_diet.member.vo.ReLoginRequestVO;
+import com.diet.second_project_diet.member.vo.ReLoginVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
 import com.diet.second_project_diet.utils.AESAlgorithm;
 
@@ -253,20 +255,35 @@ public class HiaMemberService {
     }
 
     // 회원 이미지 수정
-    public HiaResponseVO updateImgFile(MultipartFile file, String token){
+    public HiaResponseVO updateImgFile(MultipartFile file, String token) {
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         String saveFilePath = "";
-        try{
+        try {
             saveFilePath = fileService.saveImageFile(file);
             member.setMiImg(saveFilePath);
             mRepo.save(member);
             response = HiaResponseVO.builder()
-            .status(true).message("파일 등록 완료").build();
-        }
-        catch(Exception e){
+                    .status(true).message("파일 등록 완료").build();
+        } catch (Exception e) {
             response = HiaResponseVO.builder()
-            .status(false).message("파일 전송에 실패했습니다.").build();
+                    .status(false).message("파일 전송에 실패했습니다.").build();
+        }
+        return response;
+    }
+
+    public ReLoginVO Login(ReLoginRequestVO data) {
+        ReLoginVO response = new ReLoginVO();
+        try{
+            MemberInfoEntity member = mRepo.findByMiIdAndMiPwd(data.getId(), AESAlgorithm.Encrypt(data.getPwd()));
+            if (member == null) {
+                response = ReLoginVO.builder().data(null).message("로그인에 실패하셨습니다.").status(false).build();
+            }
+            else {
+                response = ReLoginVO.builder().data(member).message("로그인 성공").status(false).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return response;
     }
