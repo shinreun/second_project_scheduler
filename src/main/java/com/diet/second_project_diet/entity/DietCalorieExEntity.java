@@ -27,4 +27,6 @@ public class DietCalorieExEntity {
   @Column(name = "dce_image") private String dceImage;
   @Schema(description = "예시 식단 칼로리", example = "300")
   @Column(name = "dce_kcal") private Integer dceKcal;
+  @Schema(description = "예시 식단 칼로리 기준", example = "1인분")
+  @Column(name = "dce_standard") private String dceStandard;
 }

@@ -331,7 +331,7 @@ public class ReDietService {
         // 일주일치 식단 추천 목록을 가져와서, 같은 날짜 별로 나눈다.
         List<DietSuggestEntity> list = new ArrayList<>();
         List<ReDietSuggestWeekResponseVO> list2 = new ArrayList<>();
-        ReDietSuggestWeekResponseVO entity= new ReDietSuggestWeekResponseVO();
+        ReDietSuggestWeekResponseVO entity = new ReDietSuggestWeekResponseVO();
         // 식단 목록의 총 개수만큼 반복문을 돌려서
         for (int i = 0; i < suggestion.size(); i++) {
           // 만약에 첫번째 식단이라면,
@@ -358,7 +358,7 @@ public class ReDietService {
           // 만약 이전날과 날짜가 다르다면, 그 요일의 시작 값이므로
           else {
             // 그 이전날의 요일을 구해서엔터티에 저장하고, 
-            String date = suggestion.get(i-1).getDietDate().getDayOfWeek().toString();
+            String date = suggestion.get(i - 1).getDietDate().getDayOfWeek().toString();
             entity = ReDietSuggestWeekResponseVO.builder().date(date).data(list).build();
             // 리스트에 엔터티를 저장한 후
             list2.add(entity);
@@ -382,8 +382,7 @@ public class ReDietService {
     }
     return response;
   }
-
-
+  
  // 식단 예시 등록
  public ReDietCalorieInsertResponseVO addDietCalorieEx(ReDietCalorieExInsertVO data, MultipartFile file) {
    ReDietCalorieInsertResponseVO response = new ReDietCalorieInsertResponseVO();
@@ -408,6 +407,7 @@ public class ReDietService {
          .dceContent(data.getDceContent())
          .dceImage(saveFilePath)
          .dceKcal(data.getDceKcal())
+         .dceStandard(data.getDceStandard())
          .build();
      calRepo.save(entity);
     response = ReDietCalorieInsertResponseVO.builder().data(entity)

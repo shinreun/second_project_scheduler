@@ -13,4 +13,6 @@ public class ReDietCalorieExInsertVO {
   private String dceContent;
   @Schema(description = "칼로리 참조표 칼로리", example="1200")
   private Integer dceKcal;
+  @Schema(description = "칼로리 참조표 칼로리 기준", example="1인분")
+  private String dceStandard;
 }
