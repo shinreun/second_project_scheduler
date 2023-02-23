@@ -3,7 +3,6 @@ package com.diet.second_project_diet.member.service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class HiaMemberService {
     }
 
     // 회원정보(회원가입) 입력 기능
-    public HiaResponseVO addMemberInfo(HiaAddMemberInfoVO data, MultipartFile file) throws Exception{
+    public HiaResponseVO addMemberInfo(HiaAddMemberInfoVO data, MultipartFile file) {
         HiaResponseVO response = new HiaResponseVO();
         if(data.getId() == null || data.getId().equals("")){
             response = HiaResponseVO.builder()
@@ -99,9 +98,18 @@ public class HiaMemberService {
              response = HiaResponseVO.builder()
                .status(false).message("파일 전송에 실패했습니다.").build();
             }
+            String AESPwd = "";
+            try{
+                AESPwd = AESAlgorithm.Encrypt(data.getPwd());
+
+            }
+            catch(Exception e){
+                response = HiaResponseVO.builder()
+               .status(false).message("비밀번호 암호화에 실패했습니다.").build();
+            }
             LocalDate endTime = LocalDate.now().plusDays(data.getTime());
             MemberInfoEntity entity = MemberInfoEntity.builder()
-            .miId(data.getId()).miPwd(AESAlgorithm.Encrypt(data.getPwd())).miName(data.getName()).miBirth(data.getBirth()).miImg(saveFilePath)
+            .miId(data.getId()).miPwd(AESPwd).miName(data.getName()).miBirth(data.getBirth()).miImg(saveFilePath)
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
             .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater())
             .miStartTime(LocalDate.now()).miToken(data.getToken()).build();
@@ -113,7 +121,7 @@ public class HiaMemberService {
     }
 
     // 목표 칼로리 수정
-    public HiaResponseVO updateGoalKcal(HiaUpdateMemberInfoVO data, String token){
+    public HiaResponseVO updateGoalKcal(Integer cal, String token){
        MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
@@ -121,7 +129,7 @@ public class HiaMemberService {
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            entity.setMiKcal(data.getCal());
+            entity.setMiKcal(cal);
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 칼로리가 변경되었습니다.").build();
@@ -130,7 +138,7 @@ public class HiaMemberService {
     }
 
     // 목표 몸무게 수정
-    public HiaResponseVO updateGoalKg(HiaUpdateMemberInfoVO data, String token){
+    public HiaResponseVO updateGoalKg(Double weight, String token){
         MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
@@ -138,7 +146,7 @@ public class HiaMemberService {
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            entity.setMiGoalKg(data.getKg());
+            entity.setMiGoalKg(weight);
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 몸무게가 변경되었습니다.").build();
@@ -147,7 +155,7 @@ public class HiaMemberService {
     }
 
     // 목표 음수량 수정
-    public HiaResponseVO updateGoalWater(HiaUpdateMemberInfoVO data, String token){
+    public HiaResponseVO updateGoalWater(Integer water, String token){
         MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
@@ -155,7 +163,7 @@ public class HiaMemberService {
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{           
-            entity.setMiWater(data.getWater());
+            entity.setMiWater(water);
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("목표 음수량이 변경되었습니다.").build();
@@ -164,7 +172,7 @@ public class HiaMemberService {
     }
 
     // 목표 날짜 수정
-    public HiaResponseVO updateGoalDay(HiaUpdateMemberInfoVO data, String token){
+    public HiaResponseVO updateGoalDay(Integer time, String token){
         MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
@@ -174,13 +182,13 @@ public class HiaMemberService {
         else {
             if (LocalDate.now().isAfter(entity.getMiEndTime())) {
                 entity.setMiStartTime(LocalDate.now());
-                entity.setMiEndTime(LocalDate.now().plusDays(data.getTime()));
+                entity.setMiEndTime(LocalDate.now().plusDays(time));
                 mRepo.save(entity);
                 response = HiaResponseVO.builder()
                         .status(true).message("목표 날짜가 변경되었습니다.").build();
             }
             else {
-                entity.setMiEndTime(entity.getMiStartTime().plusDays(data.getTime()));
+                entity.setMiEndTime(entity.getMiStartTime().plusDays(time));
                 mRepo.save(entity);
                 response = HiaResponseVO.builder()
                         .status(true).message("목표 날짜가 변경되었습니다.").build();
@@ -190,7 +198,7 @@ public class HiaMemberService {
     }
 
     // 다이어트 강도 수정
-    public HiaResponseVO updateHard(HiaUpdateMemberInfoVO data, String token){
+    public HiaResponseVO updateHard(Integer hard, String token){
         MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
         if(entity == null){
@@ -198,7 +206,7 @@ public class HiaMemberService {
             .status(false).message("회원번호를 확인해주세요.").build();
         }
         else{
-            entity.setMiHard(data.getHard());
+            entity.setMiHard(hard);
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("다이어트 강도가 변경되었습니다.").build();
@@ -207,23 +215,23 @@ public class HiaMemberService {
     } 
 
     // 회원 탈퇴
-    public HiaResponseVO deleteMember(HiaUpdateMemberInfoVO data ,String token){
+    public HiaResponseVO deleteMember(String token){
         MemberInfoEntity entity = mRepo.findByMiTokenIs(token);
         HiaResponseVO response = new HiaResponseVO();
-        if(entity == null){
-            response = HiaResponseVO.builder()
-            .status(false).message("회원번호를 확인해주세요.").build();
-        }
-        else if(!entity.getMiPwd().equals(data.getPwd())){
-            response = HiaResponseVO.builder()
-            .status(false).message("비밀번호가 맞지 않습니다.").build();
-        }
-        else{
+        // if(entity == null){
+        //     response = HiaResponseVO.builder()
+        //     .status(false).message("회원번호를 확인해주세요.").build();
+        // }
+        // else if(!entity.getMiPwd().equals(data.getPwd())){
+        //     response = HiaResponseVO.builder()
+        //     .status(false).message("비밀번호가 맞지 않습니다.").build();
+        // }
+        // else{
             entity.setMiStatus(2);
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원 탈퇴가 완료되었습니다.").build();
-        }
+        // }
         return response;
     }
 
@@ -267,6 +275,29 @@ public class HiaMemberService {
         catch(Exception e){
             response = HiaResponseVO.builder()
             .status(false).message("파일 전송에 실패했습니다.").build();
+        }
+        return response;
+    }
+
+    // 로그인 기능
+    public HiaResponseVO login(String token){
+        HiaResponseVO response = new HiaResponseVO();
+        MemberInfoEntity member = mRepo.findByMiTokenIs(token);
+        if(member == null){
+            response = HiaResponseVO.builder()
+            .status(false).message("회원 토큰 정보와 일치하는 정보가 없어 로그인에 실패하였습니다.").build();
+        }
+        else if(member.getMiStatus() == 1){
+            response = HiaResponseVO.builder()
+            .status(false).message("해당 계정은 사용 대기 상태라 사용불가 합니다.").build();
+        }
+        else if(member.getMiStatus() == 2){
+            response = HiaResponseVO.builder()
+            .status(false).message("해당 계정은 사용 정지 상태라 사용불가 합니다.").build();
+        }
+        else{
+            response = HiaResponseVO.builder()
+            .status(true).message("로그인 되었습니다.").build();
         }
         return response;
     }

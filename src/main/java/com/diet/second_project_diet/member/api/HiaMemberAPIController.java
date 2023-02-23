@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,50 +44,55 @@ public class HiaMemberAPIController {
     @PutMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HiaResponseVO> putMemberAdd (
     @Parameter(description = "회원 정보") HiaAddMemberInfoVO data,
-    @Parameter(description = "사진 파일") MultipartFile file) throws Exception {
+    @Parameter(description = "사진 파일") MultipartFile file) {
         return new ResponseEntity<>(mService.addMemberInfo(data, file), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 칼로리 변경", description = "회원별 목표 칼로리 변경")
     @PatchMapping("/update/kcal")
-    public ResponseEntity<HiaResponseVO> patchGoalKcal(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchGoalKcal(
+    @Parameter(description = "변경 칼로리") @RequestParam Integer cal,    
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.updateGoalKcal(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateGoalKcal(cal, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표  몸무게 변경", description = "회원별 목표 몸무게 변경")
     @PatchMapping("/update/kg")
-    public ResponseEntity<HiaResponseVO> patchGoalKg(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchGoalKg(
+    @Parameter(description = "변경 몸무게") @RequestParam Double weight,
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.updateGoalKg(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateGoalKg(weight, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 음수량 변경", description = "회원별 목표 음수량 변경")
     @PatchMapping("/update/water")
-    public ResponseEntity<HiaResponseVO> patchGoalWater(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchGoalWater(
+    @Parameter(description = "변경 음수량") @RequestParam Integer water,
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.updateGoalWater(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateGoalWater(water, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 날짜 변경", description = "회원별 목표 날짜 변경")
     @PatchMapping("/update/day")
-    public ResponseEntity<HiaResponseVO> patchGoalDay(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchGoalDay(
+    @Parameter(description = "변경 목표 기간") @RequestParam Integer time,
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.updateGoalDay(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateGoalDay(time, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "목표 다이어트 강도 변경", description = "회원별 목표 다이어트 강도 변경")
     @PatchMapping("/update/hard")
-    public ResponseEntity<HiaResponseVO> patchHard(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchHard(
+    @Parameter(description = "변경 다이어트 강도") @RequestParam Integer hard,
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.updateHard(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.updateHard(hard, token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원탈퇴 시 상태 값 변경")
     @PatchMapping("/delete")
-    public ResponseEntity<HiaResponseVO> patchMemberStatus(@RequestBody HiaUpdateMemberInfoVO data,
+    public ResponseEntity<HiaResponseVO> patchMemberStatus(
     @Parameter(description = "회원 토큰") @RequestParam String token){
-        return new ResponseEntity<>(mService.deleteMember(data, token), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(mService.deleteMember(token), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary = "D-Day 출력", description = "회원번호 입력 하면 D-Day 계산")
@@ -104,5 +110,11 @@ public class HiaMemberAPIController {
         @Parameter(description = "회원토큰") String token
         ) {
         return new ResponseEntity<>(mService.updateImgFile(file,token), HttpStatus.ACCEPTED);
+    }
+
+    @Operation(summary = "회원 로그인", description = "토큰 정보를 조회해 회원 로그인 처리")
+    @PostMapping("/login")
+    public ResponseEntity<HiaResponseVO> login(@Parameter(description = "회원 토큰") @RequestParam String token){
+        return new ResponseEntity<HiaResponseVO>(mService.login(token), HttpStatus.ACCEPTED);
     }
 }

@@ -94,14 +94,6 @@ public class ReDietAPIController {
   @Parameter(description = "회원 토큰", example = "1") String token) {
     return new ResponseEntity<>(dService.addDietByCalorieEx(dceSeq, token), HttpStatus.OK);
   }
-
-  @Operation(summary = "식단 예시 검색 기능", description = "키워드를 포함하고 있는 식단예시를 검색합니다.")
-  @GetMapping("/search/cal") 
-  public ResponseEntity<ReDietCalorieResponseVO> addDietByCalEx(
-      @Parameter(description = "검색 키워드", example = "닭") @Nullable String keyword) {
-    return new ResponseEntity<>(dService.searchCalorieEx(keyword), HttpStatus.OK);
-  }
-  
   
   
   @Operation(summary = "식단 상세보기", description = "식단 seq번호를 통해 상세내용과 메모정보 조회")

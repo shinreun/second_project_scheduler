@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
@@ -25,7 +27,9 @@ import lombok.Builder;
 public class DayFoodCompleteEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "회원 식단 완료 정보 seq 번호", example = "1")
-  @Column(name = "dfc_seq") private Long dfcSeq;
+  @Column(name = "dfc_seq")
+  private Long dfcSeq;
+  @JsonIgnore
   @Schema(description = "회원 정보")
   @ManyToOne @JoinColumn(name = "dfc_mi_seq") MemberInfoEntity member;
   // @Column (name = "dfc_mi_seq") private Long dfcMiSeq;

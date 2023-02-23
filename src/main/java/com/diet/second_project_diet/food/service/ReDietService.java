@@ -455,8 +455,14 @@ public class ReDietService {
           success = false;
         }
         DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
+        if(total == null){
+            total = DayFoodCompleteEntity.builder()
+            .dfcDate(entity.getDfRegDt().toLocalDate()).dfcGoal(success).dfcTotalCal(totalCal).member(member).build();
+        }
+        else{
         total.setDfcTotalCal(totalCal);
         total.setDfcGoal(success);
+        }
         dietCompRepo.save(total);
         response = ReStatusAndMessageResponseVO.builder().status(true).message("식단이 등록되었습니다.").build();
       }
