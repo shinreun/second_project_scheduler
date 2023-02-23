@@ -1,10 +1,5 @@
 package com.diet.second_project_diet.pill.vo;
 
-import java.util.List;
-
-import com.diet.second_project_diet.entity.PillInfoCompleteEntity;
-import com.diet.second_project_diet.entity.PillInfoEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DhListResponseVO2 {
+public class DhListResponseVO3 {
    private Long miSeq;
    private Long pillSeq;
    private String pillName;

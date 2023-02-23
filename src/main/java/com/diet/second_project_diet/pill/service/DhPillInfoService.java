@@ -28,27 +28,36 @@ public class DhPillInfoService {
    private final PillInfoRepository pillRepo;
    private final PillinfocompleteRepository pcRepo;
 
-   // 약 추가 완료 -service 조건문 추가하기
+   // 약 추가 완료 - 기능 동작됨
    public DhResponseVO addPillInfo(DhPillInfoInsertVO data, String token) {
-      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
       DhResponseVO response = new DhResponseVO();
-      PillInfoEntity entity = PillInfoEntity.builder()
-              .piName(data.getPiName())
-              .piAmount(data.getPiAmount())
-              .piStatus(0)
-              .member(member)
-              .build();
-      pillRepo.save(entity);
-      PillInfoCompleteEntity entity2 = PillInfoCompleteEntity.builder()
-              .picTotal(0)
-              .pill(entity)
-              .picGoal(0)
-              .picDate(LocalDate.now())
-              .build();
-      pcRepo.save(entity2);
-      response = DhResponseVO.builder()
-              .status(false)
-              .message("약 정보가 추가되었습니다.").build();
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+      Integer DuplicateCheck = pillRepo.countByMemberAndPiName(member, data.getPiName());
+      if (member == null) {
+         response = DhResponseVO.builder().status(false)
+                 .message("로그인 한 회원만 이용 가능합니다.").build();
+      } else if (DuplicateCheck >= 1) {
+         response = DhResponseVO.builder().status(false)
+                 .message("이미 등록된 약입니다.").build();
+      } else {
+         PillInfoEntity entity = PillInfoEntity.builder()
+                 .piName(data.getPiName())
+                 .piAmount(data.getPiAmount())
+                 .piStatus(0)
+                 .member(member)
+                 .build();
+         pillRepo.save(entity);
+         PillInfoCompleteEntity entity2 = PillInfoCompleteEntity.builder()
+                 .picTotal(0)
+                 .pill(entity)
+                 .picGoal(0)
+                 .picDate(LocalDate.now())
+                 .build();
+         pcRepo.save(entity2);
+         response = DhResponseVO.builder()
+                 .status(true)
+                 .message("약 정보가 추가되었습니다.").build();
+      }
       return response;
    }
 
@@ -82,9 +91,10 @@ public class DhPillInfoService {
    }
 
    // 삭제
-   public DhResponseVO deletePillInfo(String token, Long piSeq, String piName) {
-      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+   public DhResponseVO deletePillInfo(String token, Long piSeq) {
       DhResponseVO response = new DhResponseVO();
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+
       if (member == null) {
          response = DhResponseVO.builder().status(false)
                  .message("로그인 한 회원만 이용 가능합니다.").build();
@@ -98,12 +108,11 @@ public class DhPillInfoService {
             response = DhResponseVO.builder()
                     .status(false)
                     .message("로그인한 회원과 약 등록자가 일치하지 않습니다.").build();
-         } else if (piSeq != pillEntity.getPiSeq() && !piName.equals(pillEntity.getPiName())) {
-            response = DhResponseVO.builder()
-                    .status(false)
-                    .message("약 정보가 일지하지 않습니다.").build();
          } else {
-            pillRepo.delete(pillEntity);
+            // pillRepo.delete(pillEntity);
+            // pillComplete.setPicGoal(0);
+            pillEntity.setPiStatus(1);
+            pillRepo.save(pillEntity);
             response = DhResponseVO.builder()
                     .status(true)
                     .message("약 정보가 삭제되었습니다.").build();
@@ -112,6 +121,7 @@ public class DhPillInfoService {
       return response;
    }
 
+   // 약 조회
    public DhListResponseVO getPillInfo(String token) {
       // listResponse 에 VO데이터를 저장함
       DhListResponseVO listResponse = new DhListResponseVO();
@@ -156,6 +166,7 @@ public class DhPillInfoService {
       return listResponse;
    }
 
+   // 약 성공 여부 조회
    public DhResponseVO getPillInfo2(LocalDate picDate, String token) {
       // 멤버 찾기
       MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
@@ -170,9 +181,7 @@ public class DhPillInfoService {
                  .status(false)
                  .message("등록된 사용자가 아닙니다.")
                  .build();
-         return response;
-      }
-      else if (pEntity.isEmpty()) {
+      } else if (pEntity.isEmpty()) {
          response = DhResponseVO.builder()
                  .status(false).message("조회된 정보가 없습니다.").build();
       } else {
@@ -198,96 +207,211 @@ public class DhPillInfoService {
       return response;
    }
 
-   // 약 하나 먹은갯수 카운트 증가
-   public DhResponseVO updatePlusPill(String token, Long seq, LocalDate date) {
-      DhResponseVO response = new DhResponseVO();
-      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
-      PillInfoEntity pill = pillRepo.findByPiSeq(seq);
-      PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, date);
+   // // 약 하나 먹은갯수 카운트 감소 - 수정전
+   // public DhResponseVO updateMinusPill(String token, Long seq, LocalDate date) {
+   //    DhResponseVO response = new DhResponseVO();
+   //
+   //    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+   //    PillInfoEntity pill = pillRepo.findByPiSeq(seq);
+   //    PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, date);
+   //
+   //    if (member == null) {
+   //       response = DhResponseVO.builder()
+   //               .status(false)
+   //               .message("일치하는 회원 정보가없습니다.")
+   //               .build();
+   //       return response;
+   //    } else if (pillComplete == null) {
+   //       response = DhResponseVO.builder()
+   //               .status(false)
+   //               .message("설정할 약이 없습니다.").build();
+   //       return response;
+   //    } else if (pillComplete.getPicTotal() <= 0) {
+   //       response = DhResponseVO.builder()
+   //               .status(false)
+   //               .message("약을 복용하지 않았습니다.")
+   //               .build();
+   //       return response;
+   //    } else if (pillComplete.getPicTotal() > 0) {
+   //       pillComplete.setPicTotal(pillComplete.getPicTotal() - 1);
+   //       pillComplete.setPicGoal(0);
+   //       pcRepo.save(pillComplete);
+   //       response = DhResponseVO.builder()
+   //               .status(false)
+   //               .message("복용량을 1 감소 시켰습니다.")
+   //               .build();
+   //
+   //
+   //    }
+   //    return response;
+   // }
 
-
-      if( member == null) {
-         response = DhResponseVO.builder()
-                 .status(false)
-                 .message("일치하는 회원 정보가없습니다.")
-                 .build();
-         return response;
-      }
-      else if (pillComplete == null) {
-         response = DhResponseVO.builder()
-                 .status(false)
-                 .message("설정할 약이 없습니다.").build();
-         return response;
-      }
-      else {
-         if (pillComplete.getPicTotal() >= pill.getPiAmount()) {
-            response = DhResponseVO.builder()
-                    .status(false)
-                    .message("일일 복용량을 초과하였습니다")
-                    .build();
-            return response;
-         }
-         else {
-            // Boolean success = false;
-            Integer status = 0;
-            if (pillComplete.getPicTotal()+1 >= pill.getPiAmount()) {
-               status = 1;
-            }
-            pillComplete.setPicTotal(pillComplete.getPicTotal()+1);
-            pillComplete.setPicGoal(status);
-            pcRepo.save(pillComplete);
-            response = DhResponseVO.builder()
-                    .status(true)
-                    .message("복용량이 1 증가하였습니다.")
-                    .build();
-            return response;
-         }
-      }
-   }
-
-   // 약 하나 먹은갯수 카운트 감소
-   public DhResponseVO updateMinusPill(String token, Long seq, LocalDate date) {
+   // 약 하나 먹은갯수 카운트 감소 - 수정본
+   public DhResponseVO updateMinusPill(String token, Long seq) {
       DhResponseVO response = new DhResponseVO();
 
       MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
       PillInfoEntity pill = pillRepo.findByPiSeq(seq);
-      PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, date);
+      PillInfoCompleteEntity pillComplete = pcRepo.findByPicSeq(seq);
 
-      if( member == null) {
+      if (member == null) {
          response = DhResponseVO.builder()
                  .status(false)
                  .message("일치하는 회원 정보가없습니다.")
                  .build();
-         return response;
-      }
-      else if (pillComplete == null) {
+
+      } else if (pill == null) {
          response = DhResponseVO.builder()
                  .status(false)
                  .message("설정할 약이 없습니다.").build();
-         return response;
-      }
-      else if(pillComplete.getPicTotal() <= 0){
-         response = DhResponseVO.builder()
-                 .status(false)
-                 .message("약을 복용하지 않았습니다.")
-                 .build();
-         return response;
-      }
 
+      }
+      // 체크 형식으로 하는거니 0이하로 내려갈 일이 없을 듯
+      // else if (pillComplete.getPicTotal() <= 0) {
+      //    response = DhResponseVO.builder()
+      //            .status(false)
+      //            .message("아직 약을 복용하지 않았습니다.")
+      //            .build();
+      // }
       else if (pillComplete.getPicTotal() > 0) {
-         pillComplete.setPicTotal(pillComplete.getPicTotal()-1);
+         pillComplete.setPicTotal(pillComplete.getPicTotal() - 1);
          pillComplete.setPicGoal(0);
          pcRepo.save(pillComplete);
          response = DhResponseVO.builder()
                  .status(false)
                  .message("복용량을 1 감소 시켰습니다.")
                  .build();
-
-
       }
       return response;
    }
+
+   // 약 하나 먹은갯수 카운트 증가
+   // 기능 추가
+   // pill_complete_table 해당 날짜 체크하고 없는 경우 감소든, 증가든 버튼을 누르는 순간 생성
+   // └ 우선, complete가 있는지 체크 → 없는 경우 새로 생성하고, 증가 또는 감소 (오류 체크)
+   public DhResponseVO updatePlusPill(String token, Long seq) {
+      // 기본값으로 오늘날짜로 설정하고 수정가능하게 위에 LocalDate제거
+      DhResponseVO response = new DhResponseVO();
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+      PillInfoEntity pill = pillRepo.findByPiSeqAndPiStatus(seq, 0);
+      if (member == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("일치하는 회원 정보가없습니다.")
+                 .build();
+      } else if (pill == null) {
+         response = DhResponseVO.builder()
+                 .status(false)
+                 .message("등록된 약이 없습니다.").build();
+         //    날짜 비교하는거
+      } else {
+         PillInfoCompleteEntity pillComplete = pcRepo.findByPillAndPicDate(pill, LocalDate.now());
+         if (pillComplete == null) {
+            Integer goal = 0;
+            if (pill.getPiAmount() == 1) {
+               goal = 1;
+            }
+            PillInfoCompleteEntity entity2 = PillInfoCompleteEntity.builder()
+                    .picTotal(1)
+                    .pill(pill)
+                    .picGoal(goal)
+                    .picDate(LocalDate.now())
+                    .build();
+            pcRepo.save(entity2);
+            response = DhResponseVO.builder()
+                    .status(true)
+                    .message("오늘 날짜에 해당하는 약 섭취량 정보가 추가 및 증가되었습니다.").build();
+         } else if (pillComplete.getPicTotal() >= pill.getPiAmount()) {
+            response = DhResponseVO.builder()
+                    .status(false)
+                    .message("일일 복용량을 초과하였습니다")
+                    .build();
+         } else {
+            // Boolean success = false;
+            Integer status = 0;
+            if (pillComplete.getPicTotal() + 1 >= pill.getPiAmount()) {
+               status = 1;
+            }
+            pillComplete.setPicTotal(pillComplete.getPicTotal() + 1);
+            pillComplete.setPicGoal(status);
+            pcRepo.save(pillComplete);
+            response = DhResponseVO.builder()
+                    .status(true)
+                    .message("복용량이 1 증가하였습니다.")
+                    .build();
+         }
+         // 빌더를 PillInfoEntity 설정 맞는지
+      }
+      return response;
+   }
+
+
+   // // 작업중
+   // 약 조희 한달치 방법 2개 ex)2022-02-02
+   //   1. 쿼리를 직접 조회 select_year(날짜), select_month(날짜) =
+   //   2. 연도, 월 조회해서 맞는거
+   // 약 조회 한달치 성공여부 상관 없이
+   // public DhResponseVO pillMonthList(String token, Integer year, Integer month) {
+   //    DhResponseVO response = new DhResponseVO();
+   //    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+   //    List<PillInfoEntity> pEntity = pillRepo.findByMember(member);
+   //    List<PillInfoCompleteEntity> pcEntity = pcRepo.findByPill(pEntity);
+   //    List<DhListResponseVO2> VO2List = new ArrayList<>();
+   //    // List<PillInfoCompleteEntity> VO2List = new ArrayList<>();
+   //    if (member == null) {
+   //       response = DhResponseVO.builder().status(false).message("등록된 사용자가 아닙니다.").build();
+   //    } else {
+   //       for (int i = 0; i < pEntity.size(); i++) {
+   //          if (year == pcEntity.get(i).getPicDate().getYear() && month == pcEntity.get(i).getPicDate().getMonthValue()) {
+   //             VO2List.add(pcEntity.get(i));
+   //          }
+   //          if (VO2List.size() == 0) {
+   //             response = DhResponseVO.builder().status(false).message("조회된 정보가 없습니다.").build();
+   //
+   //          } else {
+   //             response = DhResponseVO.builder().status(true).message("조회된 정보.").build();
+   //          }
+   //       }
+   //    }
+   //    else if (pEntity.isEmpty()) {
+   //       response = DhResponseVO.builder().status(false).message("조회된 정보가 없습니다.").build();
+   //
+   //    } else {
+   //       Integer a = 0;
+   //       for (int i = 0; i < pEntity.size(); i++) {
+   //          PillInfoEntity pill = pillRepo.findByPiSeq(pEntity.get(i).getPiSeq());
+   //          if (pcRepo.countByPillAndPicGoalAndPicDate(pill, 0, picDate) != 0) {
+   //             a++;
+   //          }
+   //       }
+   //       if (a != 0) {
+   //          response = DhResponseVO.builder().status(false).message("등록하신 약을 모두 섭취하지 않았습니다.").build();
+   //       } else {
+   //          response = DhResponseVO.builder().status(true).message("등록하신 약을 모두 섭취하셨습니다.").build();
+   //       }
+   //    }
+   //    return response;
+   // }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
