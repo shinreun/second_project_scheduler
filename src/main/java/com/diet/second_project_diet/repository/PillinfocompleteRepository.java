@@ -19,6 +19,9 @@ public interface PillinfocompleteRepository extends JpaRepository<PillInfoComple
     // public List<PillInfoCompleteEntity> findByPill(List<PillInfoEntity> pill);
 
     public Integer countByPillAndPicGoalAndPicDate(PillInfoEntity pill, Integer goal, LocalDate picDate);
+    public Integer countByPillAndPicDate(PillInfoEntity pill, LocalDate picDate);
+    
+    public List<PillInfoCompleteEntity> findByPillAndPicGoalAndPicDate(PillInfoEntity pill, Integer goal, LocalDate picDate);
 
     public PillInfoCompleteEntity findByPillAndPicDate(PillInfoEntity pill, LocalDate picDate);
 

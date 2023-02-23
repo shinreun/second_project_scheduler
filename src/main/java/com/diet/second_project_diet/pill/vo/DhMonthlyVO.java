@@ -1,5 +1,4 @@
 package com.diet.second_project_diet.pill.vo;
-
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DhListResponseVO {
+public class DhMonthlyVO {
    private boolean status;
    private String message;
-   private List<DhListResponseVO2> list;
-
+   private List<DhListResponseVO3> data;
 }

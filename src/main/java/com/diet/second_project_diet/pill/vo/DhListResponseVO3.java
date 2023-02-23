@@ -1,5 +1,7 @@
 package com.diet.second_project_diet.pill.vo;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DhListResponseVO3 {
    private Long miSeq;
-   private Long pillSeq;
-   private String pillName;
-   private Integer pillAmount;
-
+   private LocalDate date;
+   private Boolean success;
 }

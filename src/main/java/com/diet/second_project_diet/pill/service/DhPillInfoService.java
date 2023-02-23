@@ -12,6 +12,8 @@ import com.diet.second_project_diet.entity.PillInfoCompleteEntity;
 import com.diet.second_project_diet.entity.PillInfoEntity;
 import com.diet.second_project_diet.pill.vo.DhListResponseVO;
 import com.diet.second_project_diet.pill.vo.DhListResponseVO2;
+import com.diet.second_project_diet.pill.vo.DhListResponseVO3;
+import com.diet.second_project_diet.pill.vo.DhMonthlyVO;
 import com.diet.second_project_diet.pill.vo.DhPillInfoInsertVO;
 import com.diet.second_project_diet.pill.vo.DhRePillInfoInsertVO;
 import com.diet.second_project_diet.pill.vo.DhResponseVO;
@@ -174,7 +176,6 @@ public class DhPillInfoService {
       // 멤버 없을때 처리 나중에 하기
 
       List<PillInfoEntity> pEntity = pillRepo.findByMemberAndPiStatus(member, 0);
-      List<DhListResponseVO2> VO2List = new ArrayList<>();
 
       if (member == null) {
          response = DhResponseVO.builder()
@@ -346,52 +347,54 @@ public class DhPillInfoService {
    }
 
 
-   // // 작업중
+   // 작업중
    // 약 조희 한달치 방법 2개 ex)2022-02-02
    //   1. 쿼리를 직접 조회 select_year(날짜), select_month(날짜) =
    //   2. 연도, 월 조회해서 맞는거
    // 약 조회 한달치 성공여부 상관 없이
-   // public DhResponseVO pillMonthList(String token, Integer year, Integer month) {
-   //    DhResponseVO response = new DhResponseVO();
-   //    MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
-   //    List<PillInfoEntity> pEntity = pillRepo.findByMember(member);
-   //    List<PillInfoCompleteEntity> pcEntity = pcRepo.findByPill(pEntity);
-   //    List<DhListResponseVO2> VO2List = new ArrayList<>();
-   //    // List<PillInfoCompleteEntity> VO2List = new ArrayList<>();
-   //    if (member == null) {
-   //       response = DhResponseVO.builder().status(false).message("등록된 사용자가 아닙니다.").build();
-   //    } else {
-   //       for (int i = 0; i < pEntity.size(); i++) {
-   //          if (year == pcEntity.get(i).getPicDate().getYear() && month == pcEntity.get(i).getPicDate().getMonthValue()) {
-   //             VO2List.add(pcEntity.get(i));
-   //          }
-   //          if (VO2List.size() == 0) {
-   //             response = DhResponseVO.builder().status(false).message("조회된 정보가 없습니다.").build();
-   //
-   //          } else {
-   //             response = DhResponseVO.builder().status(true).message("조회된 정보.").build();
-   //          }
-   //       }
-   //    }
-   //    else if (pEntity.isEmpty()) {
-   //       response = DhResponseVO.builder().status(false).message("조회된 정보가 없습니다.").build();
-   //
-   //    } else {
-   //       Integer a = 0;
-   //       for (int i = 0; i < pEntity.size(); i++) {
-   //          PillInfoEntity pill = pillRepo.findByPiSeq(pEntity.get(i).getPiSeq());
-   //          if (pcRepo.countByPillAndPicGoalAndPicDate(pill, 0, picDate) != 0) {
-   //             a++;
-   //          }
-   //       }
-   //       if (a != 0) {
-   //          response = DhResponseVO.builder().status(false).message("등록하신 약을 모두 섭취하지 않았습니다.").build();
-   //       } else {
-   //          response = DhResponseVO.builder().status(true).message("등록하신 약을 모두 섭취하셨습니다.").build();
-   //       }
-   //    }
-   //    return response;
-   // }
+   public DhMonthlyVO pillMonthList(String token, LocalDate date) {
+      MemberInfoEntity member = memberRepo.findByMiTokenIs(token);
+      List<PillInfoEntity> pEntity = pillRepo.findByMember(member);
+      List<DhListResponseVO3> list = new ArrayList<>();
+      DhMonthlyVO response = new DhMonthlyVO();
+      if (member == null) {
+         response = DhMonthlyVO.builder().status(false).message("등록된 사용자가 아닙니다.").data(null).build();
+      }
+      else if (pEntity.isEmpty()) {
+         response = DhMonthlyVO.builder().status(false).message("등록된 약 정보가 없습니다.").data(null).build();
+      }
+      else {
+         // 입력받은 날짜의 달의 길이 동안 반복문을 돌려서
+         for (int j = 0; j < date.lengthOfMonth(); j++) {
+            Integer a = 0;
+            // 입력받은 달의 첫째날 부터 마지막 날까지의 데이터 조회
+            LocalDate day = date.withDayOfMonth(1).plusDays(j);
+            // LocalDate day = LocalDate.of(date.getYear(), date.getMonth(), j);
+            // 회원이 섭취하는 약물들을 조회해서 (1.빈혈 2.변비 라면) 
+            for (int i = 0; i < pEntity.size(); i++) {
+               // 1.빈혈 약 정보를 pill entity에 저장 -> 변비 약 정보를 저장
+               PillInfoEntity pill = pillRepo.findByPiSeq(pEntity.get(i).getPiSeq());
+               // 만약 약을 성공상태가 아닌 약이 1개 이상 조회되거나 해당 일자에 있는 complete 데이터가 존재하지 않는다면 임의의 변수를 올려주고,
+               if (pcRepo.countByPillAndPicGoalAndPicDate(pill, 0, day) != 0 || pcRepo.countByPillAndPicDate(pill, day) == 0) {
+                  a++;
+               }
+            }
+            Boolean status = false;
+            // 만약 하나라도 덜 섭취한 약이 있다면, 성공여부는 실패로 세팅
+            if (a != 0) {
+               status = false;
+            } else {
+               // 그 외의 경우는 성공여부를 성공으로 세팅
+               status = true;
+            }
+            DhListResponseVO3 data = DhListResponseVO3.builder().date(day).miSeq(member.getMiSeq()).success(status).build();
+            // response vo에 들어갈 list의 값에 하나씩 저장
+            list.add(data);
+         }
+         response = DhMonthlyVO.builder().status(true).message("해당 월의 약 섭취 성공여부가 조회되었습니다.").data(list).build();
+      } 
+      return response;
+   }
 }
 
 
