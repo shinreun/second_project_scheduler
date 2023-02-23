@@ -60,14 +60,14 @@ public class HiaMemberService {
             response = HiaResponseVO.builder()
             .status(false).message("비밀번호를 입력하세요.").build();
         }
-        else if(data.getBirth() == null){
-            response = HiaResponseVO.builder()
-            .status(false).message("생년월일을 입력하세요.").build();
-        }
-        else if(data.getGen() == null){
-            response = HiaResponseVO.builder()
-            .status(false).message("성별을 입력하세요.").build();
-        }
+        // else if(data.getBirth() == null){
+        //     response = HiaResponseVO.builder()
+        //     .status(false).message("생년월일을 입력하세요.").build();
+        // }
+        // else if(data.getGen() == null){
+        //     response = HiaResponseVO.builder()
+        //     .status(false).message("성별을 입력하세요.").build();
+        // }
         else if(data.getHard() == null){
             response = HiaResponseVO.builder()
             .status(false).message("다이어트 강도를 입력하세요.").build();
