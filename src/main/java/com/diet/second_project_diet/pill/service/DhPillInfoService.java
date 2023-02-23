@@ -47,7 +47,7 @@ public class DhPillInfoService {
               .build();
       pcRepo.save(entity2);
       response = DhResponseVO.builder()
-              .status(false)
+              .status(true)
               .message("약 정보가 추가되었습니다.").build();
       return response;
    }

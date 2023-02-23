@@ -18,7 +18,7 @@ public interface DayFoodCompleteRepository extends JpaRepository<DayFoodComplete
 
     public DayFoodCompleteEntity findByMemberAndDfcDate(MemberInfoEntity member, LocalDate dfcDate);
 
-    public List<DayFoodCompleteEntity> findByMember(MemberInfoEntity member);
+    public List<DayFoodCompleteEntity> findByMemberOrderByDfcDate(MemberInfoEntity member);
    
     public DayFoodCompleteEntity deleteByMemberAndDfcDate(MemberInfoEntity member, LocalDateTime dfcDate);
 

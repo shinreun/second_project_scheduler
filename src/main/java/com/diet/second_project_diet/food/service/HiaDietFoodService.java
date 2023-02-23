@@ -45,7 +45,7 @@ public class HiaDietFoodService {
         if(member == null){
             response = HiaResponseVO.builder()
             .status(false)
-            .message("회원번호 및 날짜를 확인해주세요.").build();
+            .message("회원토큰 및 날짜를 확인해주세요.").build();
         }
         else{
             if(entity != null){
@@ -73,12 +73,11 @@ public class HiaDietFoodService {
     public HiaGoalResponseVO getMonthDietFood(String token, Integer year, Integer month) {
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
         HiaGoalResponseVO response = new HiaGoalResponseVO();
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMemberOrderByDfcDate(member);
         List<HiaGoalVO> list = new ArrayList<>();
         HiaGoalVO vo = new HiaGoalVO();
         for(int i=0 ; i<entity.size(); i++){
         if(year == entity.get(i).getDfcDate().getYear() && month == entity.get(i).getDfcDate().getMonthValue()){
-            // list.add(entity.get(i));
             vo = HiaGoalVO.builder()
             .date(entity.get(i).getDfcDate()).goal(entity.get(i).getDfcGoal()).totalCal(entity.get(i).getDfcTotalCal()).build();
             list.add(vo);
@@ -117,9 +116,18 @@ public class HiaDietFoodService {
     // 매월 목표 달성도 출력
     public HiaProgGoalResponseVO getProgGoal(String token, Integer month){
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
+        HiaProgGoalResponseVO response = new HiaProgGoalResponseVO();
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMemberOrderByDfcDate(member);
         Integer count = 0;
         Integer length = 0;
+        Integer notCount = 0;
+        if(member == null){
+            response = HiaProgGoalResponseVO.builder().status(false).message("회원 토큰 정보를 확인해주세요.").build();
+        }
+        else if(entity.isEmpty()){
+            response = HiaProgGoalResponseVO.builder().status(false).message("조회된 정보가 없습니다.").build();
+        }
+        else{
         for(int i=0; i<entity.size(); i++){
            if(entity.get(i).getDfcDate().getMonth().getValue() == month) {
                 if(entity.get(i).getDfcGoal() == true){
@@ -127,17 +135,26 @@ public class HiaDietFoodService {
                     length = entity.get(i).getDfcDate().lengthOfMonth();
                 }
            }
+           else if(entity.get(i).getDfcDate().getMonth().getValue() != month){
+                notCount += 1;              
+           }
         }
+        if(notCount == entity.size()){
+            response = HiaProgGoalResponseVO.builder().status(false).message("등록된 정보 값이 없습니다.").build();
+        }
+        else{
         Double result = (double)count/length*100;
         String success = String.format("%.2f", result);
-        HiaProgGoalResponseVO response = HiaProgGoalResponseVO.builder().data(success).status(true).message("달성도가 출력되었습니다.").build();
+        response = HiaProgGoalResponseVO.builder().data(success).status(true).message("달성도가 출력되었습니다.").build();  
+        }
+    }
         return response;
     }
 
     // D-day 기준 목표 달성도 출력
     public HiaDdayGoalResponseVO getDdayGoal(String token) throws Exception{
         MemberInfoEntity member = mRepo.findByMiTokenIs(token);
-        List<DayFoodCompleteEntity> list = dfcRepo.findByMember(member);
+        List<DayFoodCompleteEntity> list = dfcRepo.findByMemberOrderByDfcDate(member);
         Integer count = 0;
         Integer dDay = 0;
         for(int i=0; i<list.size(); i++){
