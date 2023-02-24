@@ -1,7 +1,5 @@
 package com.diet.second_project_diet.member.vo;
 
-import java.time.LocalDate;
-
 import com.diet.second_project_diet.entity.MemberInfoEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,8 +19,8 @@ public class HiaAddMemberInfoVO {
     private String pwd;
     @Schema(description = "이름", example = "사용자01")
     private String name;
-    @Schema(description = "생년월일", example = "1999-02-05")
-    private LocalDate birth;
+    @Schema(description = "나이", example = "26")
+    private Integer age;
     @Schema(description = "성별", example = "1")
     private Integer gen;
     @Schema(description = "주소", example = "대구광역시 중구")
@@ -41,8 +39,7 @@ public class HiaAddMemberInfoVO {
     private Integer water;
     @Schema(description = "목표 기간", example = "100")
     private Integer time;
-    @Schema(description = "토큰", example = "token")
-    private String token;
+    
     // public Integer getAge(MemberInfoEntity member){
     //     Calendar now = Calendar.getInstance();
     //     Integer currentYear = now.get(Calendar.YEAR);
@@ -57,7 +54,7 @@ public class HiaAddMemberInfoVO {
         this.id = member.getMiId();
         this.pwd = member.getMiPwd();
         this.name = member.getMiName();
-        this.birth = member.getMiBirth();  
+        this.age = member.getMiAge();  
         this.gen = member.getMiGen();
         this.address = member.getMiAddress();
         this.tall = member.getMiTall();
@@ -66,6 +63,5 @@ public class HiaAddMemberInfoVO {
         this.cal = member.getMiKcal();
         this.kg = member.getMiGoalKg();
         this.water = member.getMiWater();
-        this.token = member.getMiToken();
     }
 }
