@@ -46,7 +46,7 @@ public class HiaFoodTest {
         Integer year = 0;
         Integer month = 0;
         MemberInfoEntity member = mRepo.findByMiSeq(1L);
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMemberOrderByDfcDate(member);
         List<DayFoodCompleteEntity> list = new ArrayList<>();
         for(int i=0 ; i<entity.size(); i++){
             if(year == entity.get(i).getDfcDate().getYear() && month == entity.get(i).getDfcDate().getMonthValue()){
@@ -67,7 +67,7 @@ public class HiaFoodTest {
     public void getProgGoal(){
         Integer month = 0;
         MemberInfoEntity member = mRepo.findByMiSeq(1L);
-        List<DayFoodCompleteEntity> entity = dfcRepo.findByMember(member);
+        List<DayFoodCompleteEntity> entity = dfcRepo.findByMemberOrderByDfcDate(member);
         Integer count = 0;
         Integer length = 0;
         for(int i=0; i<entity.size(); i++){
