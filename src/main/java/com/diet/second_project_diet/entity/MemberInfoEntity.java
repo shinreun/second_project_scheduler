@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +30,7 @@ public class MemberInfoEntity {
   @Column(name = "mi_name") private String miName;
   @Schema(description = "멤버 아이디", example = "user1")
   @Column(name = "mi_id") private String miId;
+  @JsonIgnore
   @Schema(description = "멤버 비밀번호", example = "1234")
   @Column(name = "mi_pwd") private String miPwd;
   @Schema(description = "멤버 나이", example = "24")

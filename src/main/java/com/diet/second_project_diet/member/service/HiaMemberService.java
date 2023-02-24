@@ -3,6 +3,7 @@ package com.diet.second_project_diet.member.service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,16 +101,27 @@ public class HiaMemberService {
                 AESPwd = AESAlgorithm.Encrypt(data.getPwd());
 
             }
-            catch(Exception e){
+            catch (Exception e) {
                 response = HiaResponseVO.builder()
-               .status(false).message("비밀번호 암호화에 실패했습니다.").build();
+                        .status(false).message("비밀번호 암호화에 실패했습니다.").build();
             }
+            // 숫자 0부터 알파벳 z까지 제한을 걸고 길이가 20짜리 랜덤 문자열 생성
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 122; // letter 'z'
+            int targetStringLength = 20;
+            Random random = new Random();
+                    
+            String randomString = random.ints(leftLimit,rightLimit + 1)
+              .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+              .limit(targetStringLength)
+              .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+              .toString();
             LocalDate endTime = LocalDate.now().plusDays(data.getTime());
             MemberInfoEntity entity = MemberInfoEntity.builder()
             .miId(data.getId()).miPwd(AESPwd).miName(data.getName()).miAge(data.getAge()).miImg(saveFilePath)
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
             .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater())
-            .miStartTime(LocalDate.now()).build();
+            .miStartTime(LocalDate.now()).miToken(randomString).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();
