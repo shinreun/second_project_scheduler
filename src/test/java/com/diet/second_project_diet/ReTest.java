@@ -44,7 +44,7 @@ public class ReTest {
 		member.setMiName("사용자");
 		member.setMiId("아이디");
 		member.setMiPwd("비밀번호");
-		member.setMiBirth(LocalDate.of(2023, 3, 9));
+		member.setMiAge(24);
 		member.setMiGen(0);
 		member.setMiAddress("주소");
 		member.setMiStatus(1);
@@ -70,7 +70,7 @@ public class ReTest {
 	void deleteDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
-		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
+		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
 		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
@@ -88,7 +88,7 @@ public class ReTest {
 	void updateDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
-		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
+		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
 		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);
@@ -105,7 +105,7 @@ public class ReTest {
 	void addDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
 		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
-		member.setMiBirth(LocalDate.of(2023, 3, 9)); member.setMiGen(0); member.setMiAddress("주소");
+		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
 		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
 		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
 		member.setMiToken("100"); memberRepo.save(member);

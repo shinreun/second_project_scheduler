@@ -32,7 +32,7 @@ public class HiaMemberTest {
         member.setMiName("이름");
         member.setMiId("아이디");
         member.setMiPwd("비밀번호");
-        member.setMiBirth(LocalDate.of(2000, 02, 01));
+        member.setMiAge(24);
         member.setMiGen(1);
         member.setMiAddress("주소");
         member.setMiStatus(1);
@@ -49,7 +49,7 @@ public class HiaMemberTest {
         Assertions.assertEquals(member.getMiName(), "이름");
         Assertions.assertEquals(member.getMiId(), "아이디");
         Assertions.assertEquals(member.getMiPwd(), "비밀번호");
-        Assertions.assertEquals(member.getMiBirth(), LocalDate.of(2000, 02, 01));
+        Assertions.assertEquals(member.getMiAge(), 24);
         Assertions.assertEquals(member.getMiGen(), 1);
         Assertions.assertEquals(member.getMiAddress(), "주소");
         Assertions.assertEquals(member.getMiStatus(), 1);
