@@ -14,7 +14,6 @@ import com.diet.second_project_diet.member.vo.HiaAddMemberInfoVO;
 import com.diet.second_project_diet.member.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
-import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.member.vo.ReLoginRequestVO;
 import com.diet.second_project_diet.member.vo.ReLoginVO;
 import com.diet.second_project_diet.repository.MemberInfoRepository;
@@ -60,9 +59,9 @@ public class HiaMemberService {
             response = HiaResponseVO.builder()
             .status(false).message("비밀번호를 입력하세요.").build();
         }
-        // else if(data.getBirth() == null){
+        // else if(data.getAge() == null){
         //     response = HiaResponseVO.builder()
-        //     .status(false).message("생년월일을 입력하세요.").build();
+        //     .status(false).message("나이를 입력하세요.").build();
         // }
         // else if(data.getGen() == null){
         //     response = HiaResponseVO.builder()
@@ -88,10 +87,6 @@ public class HiaMemberService {
             response = HiaResponseVO.builder()
             .status(false).message("목표 기간을 입력하세요.").build();
         }
-        else if(data.getToken() == null || data.getToken().equals("")){
-            response = HiaResponseVO.builder()
-            .status(false).message("토큰정보를 입력하세요.").build();
-        }
         else {
             String saveFilePath = "";
             try {
@@ -111,10 +106,10 @@ public class HiaMemberService {
             }
             LocalDate endTime = LocalDate.now().plusDays(data.getTime());
             MemberInfoEntity entity = MemberInfoEntity.builder()
-            .miId(data.getId()).miPwd(AESPwd).miName(data.getName()).miBirth(data.getBirth()).miImg(saveFilePath)
+            .miId(data.getId()).miPwd(AESPwd).miName(data.getName()).miAge(data.getAge()).miImg(saveFilePath)
             .miGen(data.getGen()).miAddress(data.getAddress()).miStatus(0).miTall(data.getTall()).miWeight(data.getWeight()).miEndTime(endTime)
             .miHard(data.getHard()).miKcal(data.getCal()).miGoalKg(data.getKg()).miWater(data.getWater())
-            .miStartTime(LocalDate.now()).miToken(data.getToken()).build();
+            .miStartTime(LocalDate.now()).build();
             mRepo.save(entity);
             response = HiaResponseVO.builder()
             .status(true).message("회원정보 등록 완료").build();

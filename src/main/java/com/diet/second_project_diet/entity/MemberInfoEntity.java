@@ -30,8 +30,8 @@ public class MemberInfoEntity {
   @Column(name = "mi_id") private String miId;
   @Schema(description = "멤버 비밀번호", example = "1234")
   @Column(name = "mi_pwd") private String miPwd;
-  @Schema(description = "멤버 생일", example = "1998-11-26")
-  @Column(name = "mi_birth") private LocalDate miBirth;
+  @Schema(description = "멤버 나이", example = "24")
+  @Column(name = "mi_age") private Integer miAge;
   @Schema(description = "멤버 성별(0.남자/1.여자)", example = "0")
   @Column(name = "mi_gen") private Integer miGen;
   @Schema(description = "멤버 주소", example = "천국")
