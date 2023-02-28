@@ -184,11 +184,11 @@ public class mgWaterService {
         }
         if(list.size() ==0) {
             response = mgMonthListVO.builder()
-            .status(true).message("조회된 정보가 없습니다.").build();
+            .status(false).message("조회된 정보가 없습니다.").success("실패").build();
         }
         else{
             response = mgMonthListVO.builder()
-            .status(true).message("조회된 정보").list(list).build();
+            .status(true).message("조회된 정보").success("성공").list(list).build();
         }
         return response;
     }
