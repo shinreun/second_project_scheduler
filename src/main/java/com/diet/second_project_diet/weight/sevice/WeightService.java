@@ -99,7 +99,8 @@ public class WeightService {
         }
         else if (list.get(i) == weight) {
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
-          response = ReGetWeightResponseVO.builder().diff(null).data(weight).diff(difference).message("체중이 조회되었습니다.")
+          Double diff = Math.ceil(difference*100)/100;
+          response = ReGetWeightResponseVO.builder().data(weight).diff(diff).message("체중이 조회되었습니다.")
               .status(true).build();
         }
       }

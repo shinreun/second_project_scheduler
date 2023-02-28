@@ -295,7 +295,7 @@ public class HiaMemberService {
                 response = ReLoginVO.builder().data(null).message("로그인에 실패하셨습니다.").status(false).build();
             }
             else {
-                response = ReLoginVO.builder().data(member).message("로그인 성공").status(false).build();
+                response = ReLoginVO.builder().data(member).message("로그인 성공").status(true).build();
             }
         } catch (Exception e) {
             e.printStackTrace();
