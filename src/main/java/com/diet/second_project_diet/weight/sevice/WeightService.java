@@ -177,7 +177,8 @@ public class WeightService {
           diffList.add(diff);
         } else {
           Double difference = list.get(i).getWeiWeight() - list.get(i - 1).getWeiWeight();
-          ReDiffWeightResponseVO diff = ReDiffWeightResponseVO.builder().difference(difference)
+          Double diff2 = Math.ceil(difference*100)/100;
+          ReDiffWeightResponseVO diff = ReDiffWeightResponseVO.builder().difference(diff2)
               .weiSeq(list.get(i).getWeiSeq())
               .weiWeight(list.get(i).getWeiWeight()).weiDate(list.get(i).getWeiDate()).build();
           diffList.add(diff);
