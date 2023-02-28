@@ -115,9 +115,9 @@ public class HiaMemberAPIController {
     }
     
     @Operation(summary = "로그인", description = "아이디와 비밀번호를 통해 로그인")
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ReLoginVO> Login(
-        @Parameter(description = "로그인 정보") ReLoginRequestVO data
+        @Parameter(description = "로그인 정보") @RequestBody ReLoginRequestVO data
     ) {
         return new ResponseEntity<>(mService.Login(data), HttpStatus.ACCEPTED);
     }
