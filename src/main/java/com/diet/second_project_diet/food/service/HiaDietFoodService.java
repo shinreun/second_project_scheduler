@@ -61,7 +61,7 @@ public class HiaDietFoodService {
         entity = DayFoodCompleteEntity.builder().member(member).dfcTotalCal(totalCal).dfcDate(data.getDay().toLocalDate()).dfcGoal(false).build();
         dfcRepo.save(entity);
             response = HiaResponseVO.builder()
-            .status(false)
+            .status(true)
             .message("해당 일 총 칼로리가 등록되었습니다.").build();
         }
         return response;
