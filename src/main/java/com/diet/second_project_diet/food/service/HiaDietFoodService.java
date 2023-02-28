@@ -175,9 +175,13 @@ public class HiaDietFoodService {
         DayFoodEntity day = dfRepo.findByDfSeq(dfSeq);
         MemoInfoEntity memo = meRepo.findByDay(day);
         HiaDetailResponseVO response = new HiaDetailResponseVO();
-        if(day == null){
+        if (day == null) {
             response = HiaDetailResponseVO.builder()
-            .status(false).message("오늘의 식단 번호를 확인해주세요.").build();
+                    .status(false).message("오늘의 식단 번호를 확인해주세요.").build();
+        }
+        else if (memo == null) {
+            response = HiaDetailResponseVO.builder()
+            .status(true).message("오늘의 식단 상세보기").data(day).memo(null).build();
         }
         else{
             response = HiaDetailResponseVO.builder()
