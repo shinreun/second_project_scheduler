@@ -40,7 +40,6 @@ public class ReTest {
 	@Transactional
 	public void get() {
 		MemberInfoEntity member = new MemberInfoEntity();
-		member.setMiSeq(100L);
 		member.setMiName("사용자");
 		member.setMiId("아이디");
 		member.setMiPwd("비밀번호");
@@ -56,6 +55,7 @@ public class ReTest {
 		member.setMiEndTime(LocalDate.of(2022, 6, 1));
 		member.setMiWater(8);
 		member.setMiToken("100");
+		member.setMiGoalKg(60d);
 		memberRepo.save(member);
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);
 		dietRepo.save(dayfood);
@@ -69,11 +69,13 @@ public class ReTest {
 	@Transactional
 	void deleteDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
-		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
+		member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
-		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
-		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
-		member.setMiToken("100"); memberRepo.save(member);
+		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50);
+		member.setMiHard(1); member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1));
+		member.setMiEndTime(LocalDate.of(2022, 6, 1)); member.setMiWater(8); member.setMiToken("100");
+		member.setMiGoalKg(60d);
+		memberRepo.save(member);
 
 		DayFoodEntity entity = new DayFoodEntity(null, member, "메뉴", "이미지", LocalDateTime.now(), 100);
 		dietRepo.save(entity);
@@ -87,12 +89,14 @@ public class ReTest {
 	@Transactional
 	void updateDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
-		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
+		member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
-		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
-		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
-		member.setMiToken("100"); memberRepo.save(member);
-
+		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50);
+		member.setMiHard(1); member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1));
+		member.setMiEndTime(LocalDate.of(2022, 6, 1)); member.setMiWater(8); member.setMiToken("100");
+		member.setMiGoalKg(60d);
+		memberRepo.save(member);
+		
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);
 		dayfood.setDfMenu("메뉴 수정");
 		dietRepo.save(dayfood);
@@ -104,11 +108,13 @@ public class ReTest {
 	@Transactional
 	void addDailyDiet() {
 		MemberInfoEntity member = new MemberInfoEntity();
-		member.setMiSeq(100L); member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
+		member.setMiName("사용자"); member.setMiId("아이디"); member.setMiPwd("비밀번호");
 		member.setMiAge(24); member.setMiGen(0); member.setMiAddress("주소");
-		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50); member.setMiHard(1); member.setMiEndTime(LocalDate.of(2022, 6, 1));
-		member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1)); member.setMiWater(8);
-		member.setMiToken("100"); memberRepo.save(member);
+		member.setMiStatus(1); member.setMiTall(160); member.setMiWeight(50);
+		member.setMiHard(1); member.setMiKcal(1200); member.setMiStartTime(LocalDate.of(2022, 4, 1));
+		member.setMiEndTime(LocalDate.of(2022, 6, 1)); member.setMiWater(8); member.setMiToken("100");
+		member.setMiGoalKg(60d);
+		memberRepo.save(member);
 
 		DayFoodEntity dayfood = new DayFoodEntity(null, member, "메뉴", "image.jpg", LocalDateTime.now(), 120);
 		dietRepo.save(dayfood);
@@ -129,7 +135,7 @@ public class ReTest {
 	@Test
 	@Transactional
 	public void getCalorieEx() {
-		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
+		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200, null);
 		calRepo.save(cal);
 		DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
 		Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
@@ -150,7 +156,7 @@ public class ReTest {
 	@Test
 	@Transactional
 	public void addCalorieEx() {
-		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
+		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200, null);
 		calRepo.save(cal);
 		DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
 		Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
