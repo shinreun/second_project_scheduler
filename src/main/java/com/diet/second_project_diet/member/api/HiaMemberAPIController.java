@@ -2,11 +2,13 @@ package com.diet.second_project_diet.member.api;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,18 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.diet.second_project_diet.member.service.HiaFileService;
 import com.diet.second_project_diet.member.service.HiaMemberService;
 import com.diet.second_project_diet.member.vo.HiaAddMemberInfoVO;
 import com.diet.second_project_diet.member.vo.HiaDataResponseVO;
 import com.diet.second_project_diet.member.vo.HiaResponseVO;
 import com.diet.second_project_diet.member.vo.HiaTimeResponseVO;
-import com.diet.second_project_diet.member.vo.HiaUpdateMemberInfoVO;
 import com.diet.second_project_diet.member.vo.ReLoginRequestVO;
 import com.diet.second_project_diet.member.vo.ReLoginVO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Tag(name = "회원정보 관리", description = "회원정보 CRUD 관리")
@@ -34,6 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api/member")
 public class HiaMemberAPIController {
     @Autowired HiaMemberService mService;
+    @Autowired HiaFileService fileService;
 
     @Operation(summary = "회원정보 조회", description = "마이페이지에서 회원정보 조회기능")
     @GetMapping("/info")
@@ -120,6 +124,13 @@ public class HiaMemberAPIController {
         @Parameter(description = "로그인 정보") @RequestBody ReLoginRequestVO data
     ) {
         return new ResponseEntity<>(mService.Login(data), HttpStatus.ACCEPTED);
+    }
+
+    @Operation(summary = "회원 이미지 가져오기", description = "회원 이미지 가져오기")
+    @GetMapping("/image/{uri}")
+    public ResponseEntity<Resource>getMemberImg(@Parameter(description = "사진 uri", example = "member.jpg") @PathVariable String uri, HttpServletRequest request)
+    throws Exception{
+        return fileService.getImagFile(uri); 
     }
 
 }
