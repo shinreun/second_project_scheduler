@@ -45,6 +45,7 @@ public class HiaMemberTest {
         member.setMiWater(7);
         member.setMiToken("토큰");
         member.setMiImg(null);
+        member.setMiGoalKg(70d);
         mRepo.save(member);
         Assertions.assertEquals(member.getMiName(), "이름");
         Assertions.assertEquals(member.getMiId(), "아이디");
@@ -62,6 +63,7 @@ public class HiaMemberTest {
         Assertions.assertEquals(member.getMiWater(), 7);
         Assertions.assertEquals(member.getMiToken(), "토큰");
         Assertions.assertEquals(member.getMiImg(), null);
+        Assertions.assertEquals(member.getMiGoalKg(), 70d);
     }
 
 

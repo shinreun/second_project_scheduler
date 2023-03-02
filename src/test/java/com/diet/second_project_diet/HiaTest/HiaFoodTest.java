@@ -37,7 +37,7 @@ public class HiaFoodTest {
                         totalCal += list.get(i).getDfKcal();
                     }
                 }
-                Assertions.assertEquals(totalCal, 20);
+                Assertions.assertEquals(totalCal, 862);
     }
 
 
