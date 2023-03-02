@@ -44,7 +44,7 @@ public class ReDietAPIController {
   private final ReDietService dService;
   private final ReFileService fileService;
 
-  @Operation(summary = "식단 추가", description = "식단과 사진을 등록합니다.")
+  @Operation(summary = "식단 추가", description = "식단과 사진 및 메모를 등록합니다.")
   @PutMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReStatusAndMessageResponseVO> putDailyDiet(
       @Parameter(description = "식단 정보") ReDietInsertVO data,
@@ -77,7 +77,7 @@ public class ReDietAPIController {
     return new ResponseEntity<>(dService.deleteDailyDiet(token, dfSeq), HttpStatus.OK);
   }
 
-  @Operation(summary = "식단 수정", description = "식단, 사진, 등록시간을 수정합니다.")
+  @Operation(summary = "식단 수정", description = "식단, 사진, 등록시간 및 메모를 수정합니다.")
   @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReStatusAndMessageResponseVO> updateDailyDiet(
       @Parameter(description = "식단 정보") ReDietInsertVO data,

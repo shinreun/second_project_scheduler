@@ -72,6 +72,12 @@ public class ReDietService {
       DayFoodEntity entity = new DayFoodEntity(null, member, data.getMenu(), saveFilePath, today, data.getKcal());
       dietRepo.save(entity);
 
+      if (data.getContent() != null) {
+        MemoInfoEntity entity2 = MemoInfoEntity.builder()
+        .meiSeq(null).meiContent(data.getContent()).day(entity).build();
+        memoRepo.save(entity2);
+      }
+
       List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
       DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
       if (total == null) {
@@ -145,7 +151,6 @@ public class ReDietService {
             .message("존재하지 않는 식단 번호입니다.").build();
       }
       else {
-
         String saveFilePath = "";
         if (file == null) {
           saveFilePath = entity.getDfImg();
@@ -163,29 +168,45 @@ public class ReDietService {
           response = ReStatusAndMessageResponseVO.builder().status(false)
           .message("해당 칼로리를 입력하세요.").build();
         } else if (date == null) {
+          // 날짜 정보가 없는 경우, 식단 입력
           LocalDateTime today = LocalDateTime.now();
           DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, today,
           data.getKcal());
           dietRepo.save(newEntity);
+          // 메모 입력
+          if (data.getContent() != null) {
+            MemoInfoEntity entity2 = memoRepo.findByDay(newEntity);
+            entity2.setMeiContent(data.getContent());
+            memoRepo.save(entity2);
+          }
+          // 전체 칼로리 수정
           List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
           Integer totalCal = 0;
           for (int i = 0; i < list.size(); i++) {
             totalCal += list.get(i).getDfKcal();
           }
           Boolean success = true;
-        if (member.getMiKcal() < totalCal) {
-          success = false;
-        }
-        DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
-        total.setDfcTotalCal(totalCal);
-        total.setDfcGoal(success);
-        dietCompRepo.save(total);
-        response = ReStatusAndMessageResponseVO.builder().status(true)
-        .message("식단이 수정되었습니다.").build();
-      } else {
+          if (member.getMiKcal() < totalCal) {
+            success = false;
+          }
+          DayFoodCompleteEntity total = dietCompRepo.findByMiSeqAndDfcRegDt(member.getMiSeq(), entity.getDfRegDt());
+          total.setDfcTotalCal(totalCal);
+          total.setDfcGoal(success);
+          dietCompRepo.save(total);
+          response = ReStatusAndMessageResponseVO.builder().status(true)
+          .message("식단이 수정되었습니다.").build();
+        } else {
+        // 식단 수정
         DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, date,
         data.getKcal());
         dietRepo.save(newEntity);
+        // 메모 입력
+        if (data.getContent() != null) {
+          MemoInfoEntity entity2 = MemoInfoEntity.builder()
+              .meiSeq(null).meiContent(data.getContent()).day(entity).build();
+          memoRepo.save(entity2);
+        }
+        // 총 칼로리 수정 
         List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
         Integer totalCal = 0;
         for (int i = 0; i < list.size(); i++) {

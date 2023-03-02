@@ -13,4 +13,6 @@ public class ReDietInsertVO {
   private String menu;
   @Schema(description = "칼로리", example = "480")
   private Integer kcal;
+  @Schema(description = "메모 내용")
+  private String content;
 }
