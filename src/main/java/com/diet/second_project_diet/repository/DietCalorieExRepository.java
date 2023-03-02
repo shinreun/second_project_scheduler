@@ -10,5 +10,9 @@ public interface DietCalorieExRepository extends JpaRepository<DietCalorieExEnti
   DietCalorieExEntity findByDceSeq(Long dceSeq);
 
   List<DietCalorieExEntity> findByDceContentContains(String dceContent);
+
+  Integer countByDceContent(String dceContent);
+  
+  DietCalorieExEntity findByDceContent(String dceContent);
   
 }

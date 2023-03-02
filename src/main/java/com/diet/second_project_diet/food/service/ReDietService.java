@@ -395,7 +395,18 @@ public class ReDietService {
   } else if (data.getDceKcal() == null) {
     response = ReDietCalorieInsertResponseVO.builder().data(null)
         .status(false).message("예시 식단의 칼로리를 입력하세요.").build();
-   } else {
+  } 
+  else if (calRepo.countByDceContent(data.getDceContent()) != 0) {
+    if (data.getDceStandard() != null
+        || calRepo.findByDceContent(data.getDceContent()).getDceStandard().equals(data.getDceStandard())) {
+      response = ReDietCalorieInsertResponseVO.builder().data(null)
+          .status(false).message("이미 존재하는 식단입니다.").build();
+    }
+    else if (data.getDceStandard() == null || calRepo.findByDceContent(data.getDceContent()).getDceStandard() == null) {
+       response = ReDietCalorieInsertResponseVO.builder().data(null)
+          .status(false).message("이미 존재하는 식단입니다.").build();
+    }
+  }else {
      String saveFilePath = "";
      String saveFilePath2 = "";
      try {
