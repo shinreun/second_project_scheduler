@@ -73,8 +73,8 @@ public class ReDietService {
       dietRepo.save(entity);
 
       if (data.getContent() != null) {
-        MemoInfoEntity entity2 = MemoInfoEntity.builder()
-        .meiSeq(null).meiContent(data.getContent()).day(entity).build();
+      MemoInfoEntity entity2 = MemoInfoEntity.builder()
+      .meiSeq(null).meiContent(data.getContent()).day(entity).build();
         memoRepo.save(entity2);
       }
 
@@ -173,13 +173,19 @@ public class ReDietService {
           DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, today,
           data.getKcal());
           dietRepo.save(newEntity);
+          MemoInfoEntity memo = memoRepo.findByDay(newEntity);
           // 메모 입력
-          if (data.getContent() != null) {
-            MemoInfoEntity entity2 = memoRepo.findByDay(newEntity);
-            entity2.setMeiContent(data.getContent());
+          if (memo != null) {
+          memo = MemoInfoEntity.builder()
+              .meiSeq(memo.getMeiSeq()).meiContent(data.getContent()).day(entity).build();
+            memoRepo.save(memo);
+          }
+          else if (memo == null && data.getContent() != null) {
+            MemoInfoEntity entity2 = MemoInfoEntity.builder()
+            .meiSeq(null).meiContent(data.getContent()).day(entity).build();
             memoRepo.save(entity2);
           }
-          // 전체 칼로리 수정
+            // 전체 칼로리 수정
           List<DayFoodEntity> list = dietRepo.findByMiSeqAndDfRegDt(member.getMiSeq(), entity.getDfRegDt());
           Integer totalCal = 0;
           for (int i = 0; i < list.size(); i++) {
@@ -200,10 +206,16 @@ public class ReDietService {
         DayFoodEntity newEntity = new DayFoodEntity(entity.getDfSeq(), member, data.getMenu(), saveFilePath, date,
         data.getKcal());
         dietRepo.save(newEntity);
+        MemoInfoEntity memo = memoRepo.findByDay(newEntity);
         // 메모 입력
-        if (data.getContent() != null) {
+        if (memo != null) {
+          memo = MemoInfoEntity.builder()
+              .meiSeq(memo.getMeiSeq()).meiContent(data.getContent()).day(entity).build();
+          memoRepo.save(memo);
+        }
+        else if (memo == null && data.getContent() != null) {
           MemoInfoEntity entity2 = MemoInfoEntity.builder()
-              .meiSeq(null).meiContent(data.getContent()).day(entity).build();
+          .meiSeq(null).meiContent(data.getContent()).day(entity).build();
           memoRepo.save(entity2);
         }
         // 총 칼로리 수정 
