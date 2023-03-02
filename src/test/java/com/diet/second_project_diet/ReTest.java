@@ -126,14 +126,14 @@ public class ReTest {
 	}
 
 	// 식단 예시 출력
-	// @Test
-	// @Transactional
-	// public void getCalorieEx() {
-	// 	DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
-	// 	calRepo.save(cal);
-	// 	DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
-	// 	Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
-	// }
+	@Test
+	@Transactional
+	public void getCalorieEx() {
+		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
+		calRepo.save(cal);
+		DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
+		Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
+	}
 
 	// 추천 식단 등록
 	@Test
@@ -147,16 +147,16 @@ public class ReTest {
 	}
 
 	// 식단 예시 등록
-	// @Test
-	// @Transactional
-	// public void addCalorieEx() {
-	// 	DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
-	// 	calRepo.save(cal);
-	// 	DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
-	// 	Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
-	// 	Assertions.assertEquals(entity.getDceImage(), cal.getDceImage());
-	// 	Assertions.assertEquals(entity.getDceKcal(), cal.getDceKcal());
-	// }
+	@Test
+	@Transactional
+	public void addCalorieEx() {
+		DietCalorieExEntity cal = new DietCalorieExEntity(null, "치킨", "chicken.jpg", 1200);
+		calRepo.save(cal);
+		DietCalorieExEntity entity = calRepo.findByDceSeq(cal.getDceSeq());
+		Assertions.assertEquals(entity.getDceContent(), cal.getDceContent());
+		Assertions.assertEquals(entity.getDceImage(), cal.getDceImage());
+		Assertions.assertEquals(entity.getDceKcal(), cal.getDceKcal());
+	}
 	
 	// 식단 예시를 선택해서 식단 입력
 	@Test

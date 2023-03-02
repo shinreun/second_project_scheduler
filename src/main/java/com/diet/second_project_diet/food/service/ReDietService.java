@@ -397,8 +397,11 @@ public class ReDietService {
         .status(false).message("예시 식단의 칼로리를 입력하세요.").build();
    } else {
      String saveFilePath = "";
+     String saveFilePath2 = "";
      try {
        saveFilePath = fileService.saveCalorieImageFile(file);
+       saveFilePath2 = fileService.saveImageFile(file);
+
      } catch (Exception e) {
       response = ReDietCalorieInsertResponseVO.builder().data(null)
         .status(false).message("파일 전송에 실패했습니다.").build();
